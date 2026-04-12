@@ -1,0 +1,13 @@
+.hoverToOutline {
+	transition: outline 0.3s ease-in-out;
+}
+.hoverToOutline:hover {
+	outline: 1px solid var(--brand-element);
+}
+
+button.clickToSizeUp {
+	transition: transform 0.3s ease-in-out;
+}
+button.clickToSizeUp:active {
+	transform: scale(1.2);
+}

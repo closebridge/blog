@@ -1,0 +1,19 @@
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mDMEac+FJBYJKwYBBAHaRw8BAQdAL8vlOTzjbO9qVwUbFcifK/ZmgkeK/8HY31EC
+HxtQfYG0GW5vZ2MgPG5vZ2NAbm9naXNvZnQud29yaz6ItQQTFgoAXRYhBE3sZNwN
+Y1N78qklo0/wbBF5QarKBQJpz4UkGxSAAAAAAAQADm1hbnUyLDIuNSsxLjEyLDAs
+MwIbAwUJBaOagAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRBP8GwReUGq
+ymOuAQCt9Nl9Z0Y+nZJ+LSr9fBG7tGBwN0oJQZQ7tnQCqaQm6gEA0kACql5jT0Iq
+bq2Y7As++gdCT5I94MuMQt4eshq0DwC4OARpz4UkEgorBgEEAZdVAQUBAQdA2noF
+EeHR2IC58HwtzVQYyLtnrCdMllEIG6IMfYUsLg0DAQgHiJoEGBYKAEIWIQRN7GTc
+DWNTe/KpJaNP8GwReUGqygUCac+FJBsUgAAAAAAEAA5tYW51MiwyLjUrMS4xMiww
+LDMCGwwFCQWjmoAACgkQT/BsEXlBqsqELAEA7N5D/CrO+4DdYBbZbiwyxnVFb2WU
+TSl+jMH8SorCbMYA/0cbNz8Xd4JK34qQNm9D2Ipybjao39qR3TC2y8MPkywN
+=osZP
+-----END PGP PUBLIC KEY BLOCK-----
+
+
+i am ngoc/nogc, ive signed this at 01:15 gmt+7, someday in quarter 2, 26, with total control of this public key.
+
+if you wish to send a message somewhat secretly, kindly ENCRYPT your message with this public key, thanks <3

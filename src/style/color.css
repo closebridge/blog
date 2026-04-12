@@ -1,0 +1,43 @@
+:root {
+	transition:
+		color 300ms ease-in-out,
+		background-color 200ms ease-in,
+		border-color 200ms ease-in;
+	color-scheme: light;
+	--background: radial-gradient(
+		79.55% 165.04% at 30.49% 8.4%,
+		#ebdcc7 31.25%,
+		#efefef 100%
+	);
+	--brand-color: #d49742;
+	--brand-diluted: #f0e7dd;
+	--primary-text: #2a2a2a;
+	--secondary-text: #888888;
+	--disabled-text: #b9b9b9;
+	--primary-element: #f6f3ee;
+	--secondary-element: #cbc9c5;
+	--misc-macos-traffic-disabled-color: #cbc9c5;
+}
+
+:root.dark {
+	color-scheme: dark;
+	--background: radial-gradient(
+		79.55% 165.04% at 30.49% 8.4%,
+		#1a1a1a 31.25%,
+		#433934 100%
+	);
+	--brand-diluted: #80674a;
+	--primary-text: #f6f3ee;
+	--secondary-text: #cbc9c5;
+	--disabled-text: #b9b9b9;
+	--primary-element: #2a2a2a;
+	--secondary-element: #1a1a1a;
+	--misc-macos-traffic-disabled-color: #2c2b2d;
+}
+
+* {
+	transition:
+		color 300ms ease-in-out,
+		background-color 200ms ease-in,
+		border-color 200ms ease-in;
+}

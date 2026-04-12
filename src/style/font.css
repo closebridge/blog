@@ -1,0 +1,42 @@
+p,
+h1,
+button,
+a,
+span {
+	font-family: "DM Sans", sans-serif;
+}
+
+.mono {
+	font-family: "DM Mono", monospace;
+}
+
+.serif {
+	font-family: "Source Serif 4", serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+}
+.bold {
+	font-weight: 700;
+}
+.primary-text {
+	color: var(--primary-text);
+}
+.secondary-text {
+	color: var(--secondary-text);
+}
+.disabled-text {
+	color: var(--disabled-text);
+}
+
+.prevent-select {
+	-webkit-user-select: none; /* Safari */
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none; /* Standard syntax */
+}
+
+.hide-scrollbar {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE 10+ */
+}

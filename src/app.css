@@ -1,3 +1,20 @@
-h1 {
+@import "tailwindcss";
+@import "./style/color.css";
+
+/*.material-symbols-rounded {
+	font-size: unset;
+	font-variation-settings: "opsz" unset;
+}*/
+
+/*h1 {
 	text-align: center;
+}*/
+
+.special-rounded {
+	border-radius: 6px 26px 26px 26px;
+}
+
+.hide-scrollbar {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE 10+ */
 }
