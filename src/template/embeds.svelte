@@ -28,7 +28,10 @@
 					GET: <br />https://api.nogisoft.work/personal/blog/json
 				</p>
 				<br />
-				<p class="mono">URL Parameter?: amount: number, tags: string</p>
+				<p class="mono">
+					URL Parameter?: amount?: number, tags?: string, postId?:
+					number
+				</p>
 			</div>
 		</div>
 	</div>
