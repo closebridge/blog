@@ -46,24 +46,30 @@
 				>
 					<div id="picked-title" class="w-[256px] *:px-2 text-start">
 						<p
-							class="secondary-text text-sm mono"
+							class="secondary-text text-sm"
 							id="picked-title-timer"
 						>
-							00:00 - 1st jan 20
+							{new Date(article.Timestamp).getHours()}:{new Date(
+								article.Timestamp,
+							).getMinutes()} -
+							{new Date(article.Timestamp).getDay()}/{new Date(
+								article.Timestamp,
+							).getMonth()}/{new Date(
+								article.Timestamp,
+							).getFullYear()}
 						</p>
 						<p
 							class="primary-text text-lg line-clamp-2"
 							id="picked-title-title"
 						>
-							{article.Title ||
-								"test: test test test test test test test test test test"}
+							{article.Title}
 						</p>
 						<div
 							id="picked-title-tags"
 							class="flex flex-row items-center gap-1 secondary-text"
 						>
 							{#if article.Tags && article.Tags.length > 0}
-								{#each article.Tags.slice(0, 3) as tag}
+								{#each article.Tags.split(",") as tag}
 									<p
 										class="w-fit px-3 py-1 secondary-text text-sm bg-(--primary-element) outline-1 outline-(--brand-color) rounded-xl"
 									>
