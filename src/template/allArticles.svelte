@@ -1,6 +1,8 @@
 <script lang="ts">
 	// import Title from "./components/title.svelte";
-	const articleIdentifier = String(Date.now());
+	let {
+		articleIdentifier = `article-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
+	} = $props();
 
 	// TODO: makes articleIdentier not misleading with others for some reason?
 	function scaleImageOnHover(
@@ -17,8 +19,6 @@
 			selectedElement.classList.remove("scale-110");
 		}
 	}
-
-	// export const { articleItems } = $props();
 </script>
 
 <button
