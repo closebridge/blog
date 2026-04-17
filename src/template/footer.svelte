@@ -27,7 +27,7 @@
 	<!-- whatever, looks good for smol window -->
 	<div class="md:hidden"><br /><br /></div>
 
-	<div class="*:block secondary-text text-start md:text-end">
+	<div class="*:block disabled-text font-normal text-start md:text-end">
 		<p>nogi, {new Date().getFullYear()}</p>
 		<p>no tracking. some hook states. also api calls.</p>
 	</div>

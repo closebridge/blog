@@ -1,5 +1,16 @@
-<script>
+<script lang="ts">
 	import Title from "./components/title.svelte";
+	import { type PageStatus } from "../script/PageStatusFetcher";
+
+	const {
+		Comment,
+		CommentOwner,
+		CommentTimestamp,
+		FavoritePostId,
+		isLoading,
+	}: PageStatus & { isLoading: boolean } = $props();
+
+	// console.log(CommentTimeStamp);
 </script>
 
 <div class="flex flex-col justify-start gap-y-3">
@@ -7,14 +18,23 @@
 
 	<p id="displayed_thought" class="primary-text text-3xl bold serif">
 		<span>"</span>
-		XDDDDDD
+		{!isLoading ? Comment : "let me think about this..."}
 	</p>
 
-	<p id="thought_author" class="secondary-text"><span>-</span> nogc, 2026</p>
+	<p id="thought_author" class="secondary-text">
+		<span>-</span>
+		{!isLoading ? CommentOwner : "nogc"}
+		,
+		{!isLoading
+			? (new Date(CommentTimestamp).getFullYear() ?? 1776432350603)
+			: 1776432350603}
+	</p>
 
 	<div id="special_data">
 		<p class="mono secondary-text text-sm">
-			unix timestamp: <span class="mono font-thin">234567894323</span>
+			unix timestamp: <span class="mono font-thin">
+				{!isLoading ? CommentTimestamp : 1776432350603}
+			</span>
 		</p>
 		<p class="mono secondary-text text-sm">
 			public pgp key:
