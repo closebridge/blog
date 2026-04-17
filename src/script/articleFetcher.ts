@@ -21,5 +21,3 @@ export async function getArticles(
 	if (response.ok) return JSON.parse(await response.text());
 	else return false;
 }
-
-(async () => console.log(await getArticles()))();
