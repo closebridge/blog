@@ -22,6 +22,17 @@
 
 	import PageStatusFetcher from "./script/PageStatusFetcher";
 	import { type PageStatus } from "./script/PageStatusFetcher";
+
+	let favePostId: number = $state(0);
+	let pageStatusResult = $state<PageStatus | null>(null);
+
+	$effect(() => {
+		// This runs when component mounts
+		PageStatusFetcher().then((result) => {
+			pageStatusResult = result;
+			favePostId = result.FavoritePostId;
+		});
+	});
 </script>
 
 <div
@@ -33,33 +44,34 @@
 		class="flex md:flex-row justify-around
 		flex-col gap-5 md:gap-0"
 	>
-		{#await PageStatusFetcher()}
+		{#if pageStatusResult}
 			<MyThought
-				Comment={"let me think about this..."}
+				Comment={pageStatusResult.Comment}
+				CommentOwner={pageStatusResult.CommentOwner}
+				CommentTimestamp={pageStatusResult.CommentTimestamp}
+				FavoritePostId={pageStatusResult.FavoritePostId}
+				isLoading={false}
+			/>
+		{:else}
+			<MyThought
+				Comment={"no cant do..."}
 				CommentOwner={"nogc"}
 				CommentTimestamp={1776432350603}
 				FavoritePostId={1}
 				isLoading={false}
 			/>
-		{:then pageStatus}
-			<MyThought
-				Comment={pageStatus.Comment}
-				CommentOwner={pageStatus.CommentOwner}
-				CommentTimestamp={pageStatus.CommentTimestamp}
-				FavoritePostId={pageStatus.FavoritePostId}
-				isLoading={false}
-			/>
-		{/await}
-		<EditorPickedArticle />
+		{/if}
+		<EditorPickedArticle postId={favePostId} />
 	</div>
 	<div>
 		<Title numberCount={3} title="my articles" classes="align-center" />
 		<div class="grid grid-cols-2 items-start md:items-center gap-6 mx-4">
-			{#await getArticles(6)}
+			{#await getArticles(5, 0)}
 				<p>Loading...</p>
 			{:then articles}
 				{#if articles}
 					{#each articles as article}
+						{console.log(article)}
 						<Article
 							PostId={article.PostId}
 							Timestamp={article.Timestamp}
