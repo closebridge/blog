@@ -37,7 +37,7 @@
 
 <div
 	class="flex flex-col items-startmd:items-center justify-center gap-16 my-8 md:mx-0 mx-3
-	"
+	md:px-20 lg:px-40"
 >
 	<Header />
 	<div
