@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "./style/color.css";
+@import "./style/button.css";
+@import "./style/font.css";
 
 /*.material-symbols-rounded {
 	font-size: unset;
