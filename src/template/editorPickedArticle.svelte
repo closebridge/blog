@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Title from "./components/title.svelte";
-	import { getArticles } from "../script/articleFetcher";
+	import { getArticles } from "../script/blogEndpointFetcher";
 
 	let { postId = 0 } = $props();
 

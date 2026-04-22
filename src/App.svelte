@@ -13,11 +13,12 @@
 	import TagHeatmap from "./template/tagHeatmap.svelte";
 	import Embeds from "./template/embeds.svelte";
 	import Footer from "./template/footer.svelte";
+	import Editor from "./template/editor.svelte";
 
 	import {
 		getArticles,
 		type ArticleStructure,
-	} from "./script/articleFetcher";
+	} from "./script/blogEndpointFetcher";
 	import Article from "./template/components/article.svelte";
 
 	import PageStatusFetcher from "./script/pageStatusFetcher";
@@ -36,14 +37,11 @@
 </script>
 
 <div
-	class="flex flex-col items-startmd:items-center justify-center gap-16 my-8 md:mx-0 mx-3
-	md:px-20 lg:px-40"
+	class="flex flex-col md:items-center justify-center gap-16 my-8 md:mx-0 mx-3
+	sm:px-4 md:px-20 lg:px-40"
 >
 	<Header />
-	<div
-		class="flex md:flex-row justify-around
-		flex-col gap-5 md:gap-0"
-	>
+	<div class="flex md:flex-row justify-around flex-col md:gap-0">
 		{#if pageStatusResult}
 			<MyThought
 				Comment={pageStatusResult.Comment}
@@ -61,10 +59,16 @@
 				isLoading={false}
 			/>
 		{/if}
+
+		<br />
+		<br />
+
 		<EditorPickedArticle postId={favePostId} />
 	</div>
+
 	<div>
 		<Title numberCount={3} title="my articles" classes="align-center" />
+
 		<div class="grid grid-cols-2 items-start md:items-center gap-6 mx-4">
 			{#await getArticles(5, 0)}
 				<p>Loading...</p>
@@ -89,10 +93,11 @@
 		</div>
 	</div>
 	<div
-		class="flex md:flex-row items-start
-		flex-col"
+		class="flex items-start
+		flex-col md:flex-row gap-10"
 	>
 		<TagHeatmap />
+
 		<Embeds />
 	</div>
 	<Footer />
