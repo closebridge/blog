@@ -93,7 +93,7 @@
 	</div>
 	<div
 		class="flex items-start
-		flex-col md:flex-row gap-10"
+		flex-col md:flex-row gap-10 w-full"
 	>
 		<TagHeatmap />
 
