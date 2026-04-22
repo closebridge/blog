@@ -1,6 +1,6 @@
 <script lang="ts">
 	// import Title from "./components/title.svelte";
-	import { type ArticleStructure } from "../../script/articleFetcher";
+	import { type ArticleStructure } from "../../script/blogEndpointFetcher";
 	let {
 		articleIdentifier = `article-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
 		PostId,
