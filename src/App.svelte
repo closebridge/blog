@@ -40,7 +40,7 @@
 	sm:px-4 md:px-20 lg:px-40"
 >
 	<Header />
-	<div class="flex md:flex-row justify-around flex-col md:gap-0">
+	<div class="flex md:flex-row justify-around flex-col w-full">
 		{#if pageStatusResult}
 			<MyThought
 				Comment={pageStatusResult.Comment}
