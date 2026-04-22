@@ -24,3 +24,9 @@ export async function getArticles(
 	if (response.ok) return JSON.parse(await response.text());
 	else return false;
 }
+
+export async function getTags(): Promise<Record<string, number> | false> {
+	const response = await fetch(`${endpointDomain}/personal/blog/tags`);
+	if (response.ok) return JSON.parse(await response.text());
+	else return false;
+}
