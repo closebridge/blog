@@ -21,15 +21,14 @@
 	} from "./script/blogEndpointFetcher";
 	import Article from "./template/components/article.svelte";
 
-	import pageStatusFetcher from "./script/pageStatusFetcher";
-	import { type PageStatus } from "./script/pageStatusFetcher";
+	import { getPageStatus, type PageStatus } from "./script/pageStatusFetcher";
 
 	let favePostId: number = $state(0);
 	let pageStatusResult = $state<PageStatus | null>(null);
 
 	$effect(() => {
 		// This runs when component mounts
-		pageStatusFetcher().then((result) => {
+		getPageStatus().then((result) => {
 			pageStatusResult = result;
 			favePostId = result.FavoritePostId;
 		});
