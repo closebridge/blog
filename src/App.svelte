@@ -20,8 +20,8 @@
 	} from "./script/articleFetcher";
 	import Article from "./template/components/article.svelte";
 
-	import PageStatusFetcher from "./script/PageStatusFetcher";
-	import { type PageStatus } from "./script/PageStatusFetcher";
+	import PageStatusFetcher from "./script/pageStatusFetcher";
+	import { type PageStatus } from "./script/pageStatusFetcher";
 
 	let favePostId: number = $state(0);
 	let pageStatusResult = $state<PageStatus | null>(null);

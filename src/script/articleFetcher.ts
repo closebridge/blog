@@ -1,3 +1,5 @@
+import { endpointDomain } from "./getEndPointDomain";
+
 export type ArticleStructure = {
 	PostId: number;
 	Timestamp: number;
@@ -7,10 +9,6 @@ export type ArticleStructure = {
 	Body: string;
 	Location: string;
 };
-
-const endpointDomain = document.location.href.includes("localhost")
-	? "http://localhost:8787"
-	: "https://api.nogisoft.work";
 
 export async function getArticles(
 	amount: number = 5,

@@ -91,7 +91,7 @@
 						/>
 					</div>
 					<img
-						class="w-[290px] absolute -right-4 -bottom-6 rounded-3xl outline-2 outline-(--brand-color)"
+						class="w-72.5 absolute -right-4 -bottom-6 rounded-3xl outline-2 outline-(--brand-color)"
 						src={imageUrl}
 						alt={article.Title || "thumbnail"}
 						id="picked-image"

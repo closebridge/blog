@@ -1,6 +1,4 @@
-const endpointDomain = document.location.href.includes("localhost")
-	? "http://localhost:8787"
-	: "https://api.nogisoft.work";
+import { endpointDomain } from "./getEndPointDomain";
 
 export type PageStatus = {
 	Comment: string;

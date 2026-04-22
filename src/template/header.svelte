@@ -9,4 +9,5 @@
 		<div class="flex flex-row gap-3 items-center justify-center"></div>
 	</div>
 	<div class="md:block disabled"></div>
+	<div class="md:block disabled"></div>
 </header>

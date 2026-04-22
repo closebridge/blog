@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Title from "./components/title.svelte";
-	import { type PageStatus } from "../script/PageStatusFetcher";
+	import { type PageStatus } from "../script/pageStatusFetcher";
 
 	const {
 		Comment,
