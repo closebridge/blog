@@ -68,7 +68,7 @@
 			{Title.slice(0, 30)}
 		</p>
 		<div
-			class="flex flex-row overflow-x-hidden p-1 gap-1
+			class="flex flex-row overflow-x-hidden p-1 gap-1 secondary-text
 			*:px-2 *:py-1 *:outline *:outline-(--brand-color) *:rounded-xl *:w-fit *:line-clamp-1"
 		>
 			{#each Tags.split(",") as tag}
