@@ -1,5 +1,5 @@
 <div
-	class="border-t-2 border-(--secondary-text) flex flex-col md:flex-row justify-between items-start md:items-end py-6 px-2"
+	class="w-full border-t-2 border-(--secondary-text) flex flex-col md:flex-row justify-between items-start md:items-end py-6 px-2"
 >
 	<div class="grid grid-cols-2 justify-evenly gap-4">
 		<div class="*:block secondary-text">
