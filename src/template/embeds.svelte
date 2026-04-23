@@ -2,7 +2,7 @@
 	import Title from "./components/title.svelte";
 </script>
 
-<div class=" w-full px-2">
+<div class=" w-full">
 	<Title title="embed my blog" numberCount={5} />
 	<div class="flex flex-col md:flex-row items-start gap-2">
 		<div class="flex flex-col justify-center items-start md:w-1/2 h-full">

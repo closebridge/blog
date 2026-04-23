@@ -48,9 +48,7 @@
 	<div class="flex justify-center">
 		<div
 			id="heattag-parent"
-			class="flex flex-wrap justify-center items-center pt-2 md:pt-10 gap-1
-
-			*:self-start *:leading-none *:inline *:primary-text *:text-(--primary-text) wrap-break-word *:bg-(--brand-diluted) *:outline-1 *:outline-(--brand-color) *:rounded-md"
+			class="flex flex-wrap justify-center items-center pt-2 md:pt-10 gap-1"
 		>
 			{#await getTags()}
 				<p class="secondary-text font-mono">hold on...</p>
@@ -58,6 +56,16 @@
 				{#each Object.entries(tags) as tag}
 					<p
 						class="
+
+						self-start
+						leading-none
+						inline
+						primary-text
+						text-(--primary-text) wrap-break-word
+						bg-(--brand-diluted)
+						outline-1
+						outline-(--brand-color)
+						rounded-md
 						{tagSizing(tag[1], 'text')}
 						{tagSizing(tag[1], 'opacity')}
 						{tagSizing(tag[1], 'padding')}
@@ -66,6 +74,10 @@
 						{tag[0]}
 					</p>
 				{/each}
+			{:catch}
+				<p class="secondary-text font-mono bg-none">
+					doesnt feel like it apparently...
+				</p>
 			{/await}
 		</div>
 	</div>

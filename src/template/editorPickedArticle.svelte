@@ -98,10 +98,12 @@
 					/>
 				</button>
 			{:else}
-				<p class="secondary-text mono">no article found</p>
+				<p class="secondary-text mono">
+					i havent figured which one yet LOL
+				</p>
 			{/if}
 		{/await}
 	{:else}
-		<p class="secondary-text mono">no article found</p>
+		<p class="secondary-text mono">i havent figured which one yet LOL</p>
 	{/if}
 </div>
