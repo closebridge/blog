@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Title from "./components/title.svelte";
 	import { getArticles } from "../script/blogEndpointFetcher";
+	import { isInEditingGetter } from "../script/editorHandler.svelte";
 
 	let { postId = 0 } = $props();
 
@@ -29,7 +30,15 @@
 </script>
 
 <div>
-	<Title numberCount={2} title="my picked article" />
+	{#if isInEditingGetter()}
+		<Title
+			numberCount={2}
+			title="my picked article"
+			extraFeature={{ icon: "edit", func: () => true }}
+		/>
+	{:else}
+		<Title numberCount={2} title="my picked article" extraFeature={false} />
+	{/if}
 
 	{#if postId !== 0}
 		{#await getArticles(1, postId)}

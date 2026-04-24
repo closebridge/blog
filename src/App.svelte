@@ -22,6 +22,11 @@
 	import Article from "./template/components/article.svelte";
 
 	import { getPageStatus, type PageStatus } from "./script/pageStatusFetcher";
+	import { verifyForAuthentication } from "./script/blogEndpointFetcher";
+	import {
+		isInEditingGetter,
+		isInEditingSetter,
+	} from "./script/editorHandler.svelte";
 
 	let favePostId: number = $state(0);
 	let pageStatusResult = $state<PageStatus | null>(null);
@@ -33,6 +38,40 @@
 			favePostId = result.FavoritePostId;
 		});
 	});
+	const urlParms = document.location.href.split("/");
+
+	if (urlParms[urlParms.length - 1] === "edit" && !isInEditingGetter()) {
+		const maxAttempts = 3;
+
+		(async function attemptAuth(attempts = 0) {
+			if (attempts >= maxAttempts) return;
+
+			const promptResult = prompt("pls provide the auth code <3");
+			if (promptResult === null) {
+				alert("canceled");
+				return;
+			}
+
+			const authCode = parseInt(promptResult);
+			if (isNaN(authCode)) {
+				alert("wrong.");
+				return attemptAuth(attempts + 1);
+			}
+
+			const result = await verifyForAuthentication(authCode);
+
+			if (result) {
+				isInEditingSetter(true);
+				alert("welcome me!");
+			} else if (result == null) {
+				alert("not authenticated");
+				isInEditingSetter(false);
+			} else {
+				alert("wrong.");
+				return attemptAuth(attempts + 1);
+			}
+		})();
+	}
 </script>
 
 <div
@@ -51,8 +90,8 @@
 			/>
 		{:else}
 			<MyThought
-				Comment={"no cant do..."}
-				CommentOwner={"nogc"}
+				Comment={"...pretend this isnt an error message"}
+				CommentOwner={"svelte v5's {:else}"}
 				CommentTimestamp={1776432350603}
 				FavoritePostId={1}
 				isLoading={false}
@@ -65,8 +104,17 @@
 		<EditorPickedArticle postId={favePostId} />
 	</div>
 
-	<div>
-		<Title numberCount={3} title="my articles" classes="align-center" />
+	<div class="w-full">
+		{#if isInEditingGetter()}
+			<Title
+				numberCount={3}
+				title="my articles"
+				classes="align-center"
+				extraFeature={{ icon: "edit", func: () => true }}
+			/>
+		{:else}
+			<Title numberCount={3} title="my articles" classes="align-center" />
+		{/if}
 
 		<div class="grid grid-cols-2 items-start md:items-center gap-6 mx-4">
 			{#await getArticles(5, 0)}
@@ -85,9 +133,35 @@
 							Location={article.Location}
 						/>
 					{/each}
+				{:else}
+					<div>
+						<p class="secondary-text mono">too bad then...</p>
+						<p class="secondary-text mono">too bad then...</p>
+						<p class="secondary-text mono">too bad then...</p>
+						<p class="secondary-text mono">too bad then...</p>
+						<p class="secondary-text mono">too bad then...</p>
+						<p class="secondary-text mono">too bad then...</p>
+					</div>
+					<img
+						src="https://share.valhalladev.org/u/o%20my%20god%20pls.webp"
+						alt="server(less)'s down!!!!!"
+						class="w-sm rounded-2xl outline-1 outline-(--brand-color)"
+					/>
 				{/if}
-			{:catch error}
-				<p>{error}</p>
+			{:catch}
+				<div>
+					<p class="secondary-text mono">cant find any, my fault.</p>
+					<p class="secondary-text mono">cant find any, my fault.</p>
+					<p class="secondary-text mono">cant find any, my fault.</p>
+					<p class="secondary-text mono">cant find any, my fault.</p>
+					<p class="secondary-text mono">cant find any, my fault.</p>
+					<p class="secondary-text mono">cant find any, my fault.</p>
+				</div>
+				<img
+					src="https://share.valhalladev.org/u/o%20my%20god%20pls.webp"
+					alt="server(less)'s down!!!!!"
+					class="w-sm rounded-2xl outline-1 outline-(--brand-color)"
+				/>
 			{/await}
 		</div>
 	</div>

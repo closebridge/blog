@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Title from "./components/title.svelte";
 	import { type PageStatus } from "../script/pageStatusFetcher";
+	import { editThoughts } from "../script/editorHandler.svelte";
+	import { isInEditingGetter } from "../script/editorHandler.svelte";
 
 	const {
 		Comment,
@@ -14,7 +16,15 @@
 </script>
 
 <div class="flex flex-col justify-start">
-	<Title numberCount={1} title="my latest comment" />
+	{#if isInEditingGetter()}
+		<Title
+			numberCount={1}
+			title="my latest comment"
+			extraFeature={{ icon: "edit", func: () => true }}
+		/>
+	{:else}
+		<Title numberCount={1} title="my latest comment" extraFeature={false} />
+	{/if}
 
 	<p id="displayed_thought" class="primary-text text-3xl bold serif">
 		<span>"</span>
