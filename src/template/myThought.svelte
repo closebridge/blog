@@ -20,7 +20,10 @@
 		<Title
 			numberCount={1}
 			title="my latest comment"
-			extraFeature={{ icon: "edit", func: () => editBlogPageStat() }}
+			extraFeature={{
+				icon: "edit",
+				func: () => editBlogPageStat("comment"),
+			}}
 		/>
 	{:else}
 		<Title numberCount={1} title="my latest comment" extraFeature={false} />

@@ -11,14 +11,29 @@ export function isInEditingGetter(): boolean {
 	return isInEditing;
 }
 
-export async function editBlogPageStat(): Promise<boolean> {
-	const myComment = prompt(
-		`ok, uh smart guy, @ ${new Date().toISOString()}, what do u think?`,
-	);
-	const myFavePostRaw = prompt(
-		`right, and ur fave post in its purest id number form?`,
-	);
-	const myFavePost = myFavePostRaw !== null ? Number(myFavePostRaw) : null;
+export async function editBlogPageStat(
+	type: "comment" | "favepost",
+): Promise<boolean> {
+	if (type !== "comment" && type !== "favepost") return false;
+
+	let myComment: string | undefined;
+	let myFavePost: number | null = null;
+
+	if (type === "comment") {
+		const myCommentRaw = prompt(
+			`ok, uh smart guy, @ ${new Date().toISOString()}, what do u think?`,
+		);
+		myComment =
+			myCommentRaw !== null
+				? myCommentRaw.trim()
+				: '{yall look, i just push a literal "" to the comment, this mf is restarted}';
+	} else if (type === "favepost") {
+		const myFavePostRaw = prompt(
+			`right, and ur fave post in its purest id number form?`,
+		);
+		if (myFavePostRaw == null) return false;
+		myFavePost = Number(myFavePostRaw);
+	}
 
 	const authentication: number | false = await passcodePrompt();
 
@@ -41,9 +56,7 @@ export async function editBlogPageStat(): Promise<boolean> {
 	if (typeof myComment === "string") {
 		payload.updateItems.push({
 			updateWhat: "comment",
-			toValue: myComment.trim()
-				? myComment.trim()
-				: '{yall look, i just push a literal "" to the comment, this mf is restarted}',
+			toValue: myComment.trim(),
 		});
 	}
 	if (
