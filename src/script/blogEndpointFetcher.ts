@@ -1,4 +1,5 @@
 import { endpointDomain } from "./getEndPointDomain";
+import { getPageStatus } from "./pageStatusFetcher";
 
 export type ArticleStructure = {
 	PostId: number;
@@ -28,5 +29,25 @@ export async function getArticles(
 export async function getTags(): Promise<Record<string, number> | false> {
 	const response = await fetch(`${endpointDomain}/personal/blog/tags`);
 	if (response.ok) return JSON.parse(await response.text());
+	else return false;
+}
+
+export async function verifyForAuthentication(
+	totp: number,
+): Promise<boolean | null> {
+	if (!(await getPageStatus())) return null;
+
+	const response = await fetch(`${endpointDomain}/personal/security`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			Type: "verify",
+			Authentication: totp,
+		}),
+	});
+	if (response.ok) return true;
+	else if (response.status === 421) return null;
 	else return false;
 }

@@ -1,1 +1,0 @@
-import { endpointDomain } from "./getEndPointDomain";
