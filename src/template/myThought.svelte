@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Title from "./components/title.svelte";
 	import { type PageStatus } from "../script/pageStatusFetcher";
-	import { editThoughts } from "../script/editorHandler.svelte";
+	import { editBlogPageStat } from "../script/editorHandler.svelte";
 	import { isInEditingGetter } from "../script/editorHandler.svelte";
 
 	const {
@@ -20,7 +20,7 @@
 		<Title
 			numberCount={1}
 			title="my latest comment"
-			extraFeature={{ icon: "edit", func: () => true }}
+			extraFeature={{ icon: "edit", func: () => editBlogPageStat() }}
 		/>
 	{:else}
 		<Title numberCount={1} title="my latest comment" extraFeature={false} />

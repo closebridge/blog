@@ -27,6 +27,7 @@
 		isInEditingGetter,
 		isInEditingSetter,
 	} from "./script/editorHandler.svelte";
+	import passcodePrompt from "./script/passcodePrompt";
 
 	let favePostId: number = $state(0);
 	let pageStatusResult = $state<PageStatus | null>(null);
@@ -41,34 +42,15 @@
 	const urlParms = document.location.href.split("/");
 
 	if (urlParms[urlParms.length - 1] === "edit" && !isInEditingGetter()) {
-		const maxAttempts = 3;
-
-		(async function attemptAuth(attempts = 0) {
-			if (attempts >= maxAttempts) return;
-
-			const promptResult = prompt("pls provide the auth code <3");
-			if (promptResult === null) {
-				alert("canceled");
-				return;
-			}
-
-			const authCode = parseInt(promptResult);
-			if (isNaN(authCode)) {
-				alert("wrong.");
-				return attemptAuth(attempts + 1);
-			}
-
-			const result = await verifyForAuthentication(authCode);
+		(async () => {
+			const result = await passcodePrompt();
 
 			if (result) {
 				isInEditingSetter(true);
 				alert("welcome me!");
 			} else if (result == null) {
-				alert("not authenticated");
+				alert("not authenticated / server fucked");
 				isInEditingSetter(false);
-			} else {
-				alert("wrong.");
-				return attemptAuth(attempts + 1);
 			}
 		})();
 	}
