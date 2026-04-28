@@ -58,7 +58,7 @@
 				if (matches && matches.length > 0) {
 					return matches[0];
 				}
-				return "./public/static/whoisthis.png";
+				return "./static/whoisthis.png";
 			})()}
 			alt="article"
 		/>
