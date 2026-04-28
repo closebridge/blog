@@ -58,9 +58,9 @@
 				if (matches && matches.length > 0) {
 					return matches[0];
 				}
-				return "https://share.valhalladev.org/u/placeholder-of-all.png";
+				return "./public/static/whoisthis.png";
 			})()}
-			alt="h"
+			alt="article"
 		/>
 	</div>
 
