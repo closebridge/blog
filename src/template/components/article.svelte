@@ -1,6 +1,7 @@
 <script lang="ts">
 	// import Title from "./components/title.svelte";
 	import { type ArticleStructure } from "../../script/blogEndpointFetcher";
+	import { popupRecordManager } from "./viewer.svelte";
 	let {
 		articleIdentifier = `article-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
 		PostId,
@@ -32,6 +33,16 @@
 	id={articleIdentifier}
 	onmouseenter={() => scaleImageOnHover("in")}
 	onmouseleave={() => scaleImageOnHover("out")}
+	onclick={() =>
+		popupRecordManager("open", "article", {
+			PostId,
+			Timestamp,
+			Tags,
+			Creator,
+			Title,
+			Body,
+			Location,
+		})}
 	class="cursor-pointer text-start flex flex-col md:flex-row list-image-none bg-(--primary-element) special-rounded outline-1 outline-(--brand-color) w-full overflow-hidden"
 >
 	<div class="w-full md:w-36 h-36 overflow-hidden special-rounded shrink-0">

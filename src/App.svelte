@@ -60,7 +60,9 @@
 
 <div
 	class="flex flex-col md:items-center justify-center gap-16 my-8 md:mx-0 mx-3
-	sm:px-4 md:px-20 lg:px-40"
+	sm:px-4 md:px-20 lg:px-40
+	{globalPopupState.currentVisible ? 'overflow-y-hidden hide-scrollbar' : ''}
+	"
 >
 	<Header />
 	<div class="flex md:flex-row justify-around flex-col w-full">

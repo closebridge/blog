@@ -5,37 +5,61 @@
 	// so lightweight
 
 	import { parse } from "marked";
+	import { type ArticleStructure } from "../../script/blogEndpointFetcher";
 
-	interface articleData {
-		id: number;
-		timestamp: number;
-		creator: string;
-		title: string;
-		content: string;
-		tags: string;
-		location: string;
-	}
+	// interface articleData {
+	// 	id: number;
+	// 	timestamp: number;
+	// 	creator: string;
+	// 	title: string;
+	// 	content: string;
+	// 	tags: string;
+	// 	location: string;
+	// }
 
 	export interface globalPopupState {
 		currentVisible: boolean;
-		popupRecord: articleData;
+		popupRecord: ArticleStructure;
 	}
 
 	export let globalPopupState: globalPopupState = $state({
 		currentVisible: false,
 		popupRecord: {
-			id: 1,
-			timestamp: 0,
-			creator: "me",
-			title: "this is title",
-			content:
-				"# I AM DOING THIS SHIT AGAIN, U HEARD?\n\n# XLarge Headline\n\n## Large Headline\n\n### Medium Headline\n\n#### Small Headline\n\nThis is **bold text** and this is *italic text* and this is ~~strikethrough~~\n\nThis is a longer piece of text that should wrap to multiple lines. It demonstrates how text behaves when it exceeds the width of its container.\n\n```console.log('hello, world!')```\n\n`hi chat snippet`\n\nBlock content here:\n\n+ Item A\n+ Item B\n\n\n![img](https://share.valhalladev.org/raw/20260410_001416.png)\n*cute image caption*\n\n--- \n\n | Header 1 | Header 2 | Header 3 |\n| :--- | :---: | ---: |\n| Left-aligned | Centered | Right-aligned |\n| Row 2 | Data | Data |		",
-			tags: "test,hi chat",
-			location: "vn",
+			PostId: 0,
+			Timestamp: 0,
+			Creator: "",
+			Title: "",
+			Body: "",
+			Tags: "",
+			Location: "",
 		},
 	});
 
-	function popupRecordManager() {}
+	function renderMd(body: string): string {
+		try {
+			const normalized = body.replace(/\\n/g, "\n");
+			const result = parse(normalized);
+			if (typeof result !== "string") return body;
+			return result;
+		} catch {
+			console.warn("markdown parse failed, falling back to raw text");
+			return body;
+		}
+	}
+
+	export function popupRecordManager(
+		viewState: "open" | "close",
+		type: "article" | "editor",
+		popupRecord: ArticleStructure,
+	) {
+		if (type === "article") {
+			globalPopupState.currentVisible =
+				viewState === "open" ? true : false;
+			globalPopupState.popupRecord = popupRecord;
+		} else {
+		}
+	}
+	console.log(globalPopupState);
 </script>
 
 <div
@@ -58,10 +82,22 @@
 						id="notify-author-name"
 						class="primary-text font-semibold"
 					>
-						{globalPopupState.popupRecord.creator}
+						{globalPopupState.popupRecord.Creator}
 					</p>
 
-					<p class="inline secondary-text text-sm">01/01/00</p>
+					<p class="inline secondary-text text-sm">
+						{new Date(
+							globalPopupState.popupRecord.Timestamp,
+						).getDate()}
+						/
+						{new Date(
+							globalPopupState.popupRecord.Timestamp,
+						).getMonth()}
+						/
+						{new Date(
+							globalPopupState.popupRecord.Timestamp,
+						).getFullYear()}
+					</p>
 				</div>
 			</div>
 		</div>
@@ -76,7 +112,7 @@
 					id="tagsContainer"
 					class="flex flex-row md:flex-col gap-2 items-center md:items-start justify-evenly"
 				>
-					{#each globalPopupState.popupRecord.tags.split(",") as tag}
+					{#each globalPopupState.popupRecord.Tags.split(",") as tag}
 						<div
 							style="background: var(--bar-gradient); filter: blur(0.5px); "
 							class="px-3 py-1 rounded-full backdrop-blur-[2px] outline outline-[--brand-color]"
@@ -98,18 +134,21 @@
 		>
 			<p
 				id="p-notify-subject"
-				class="serif text-2xl md:text-4xl font-medium w-full break-all"
+				class="serif text-2xl md:text-4xl font-medium w-full text-pretty"
 			>
-				AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...
+				<span class="serif text-(--disabled-text) font-bold pr-1"
+					>#{globalPopupState.popupRecord.PostId}.
+				</span>
+				{globalPopupState.popupRecord.Title}
 			</p>
 			<p
 				id="p-notify-body"
-				class="primary-text md:text-lg w-full break-all"
+				class="primary-text md:text-lg w-full break-pretty"
 			>
-				{@html parse(globalPopupState.popupRecord.content)}
+				{@html renderMd(globalPopupState.popupRecord.Body)}
 			</p>
 			<signing class="text-xl serif py-3">
-				>{globalPopupState.popupRecord.creator ?? "me"}</signing
+				>{globalPopupState.popupRecord.Creator ?? "me"}</signing
 			>
 			<!-- <img
 				src="https://share.valhalladev.org/raw/45076da80ff080aed9e1.jpg"
@@ -119,7 +158,13 @@
 		</div>
 	</div>
 	<button
-		class="bg-(--secondary-text) py-2 rounded-lg sticky bottom-2 left-1/2"
+		class="bg-(--secondary-element) py-2 rounded-lg sticky bottom-2 left-1/2 cursor-pointer"
+		onclick={() =>
+			popupRecordManager(
+				"close",
+				"article",
+				globalPopupState.popupRecord,
+			)}
 	>
 		okay
 	</button>
