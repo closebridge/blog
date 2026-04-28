@@ -5,7 +5,6 @@
 	import "./style/button.css";
 
 	import Title from "./template/components/title.svelte";
-	import ArticleViewer from "./template/components/articleViewer.svelte";
 
 	import Header from "./template/header.svelte";
 	import MyThought from "./template/myThought.svelte";
