@@ -13,7 +13,7 @@
 			<p
 				class="text-start break-all secondary-text mono bg-(--primary-element) outline-1 outline-(--brand-color) rounded-xl px-2 py-1"
 			>
-				https://api.nogisoft.work/personal/blog/rss
+				https://api.nogisoft.work/personal/blog/xml
 			</p>
 		</div>
 		<div class="flex flex-col justify-center items-start md:w-1/2">

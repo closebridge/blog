@@ -14,6 +14,9 @@
 	import Embeds from "./template/embeds.svelte";
 	import Footer from "./template/footer.svelte";
 	import Editor from "./template/editor.svelte";
+	import Viewer, {
+		globalPopupState,
+	} from "./template/components/viewer.svelte";
 
 	import {
 		getArticles,
@@ -157,3 +160,19 @@
 	</div>
 	<Footer />
 </div>
+
+{#if globalPopupState.currentVisible}
+	<div
+		id="viewerOverlay"
+		class="fixed inset-0 z-50 flex items-center justify-center"
+	>
+		<div
+			id="overlayBgButton"
+			class="absolute inset-0 bg-(--brand-diluted)/20 backdrop-blur-md"
+		></div>
+
+		<div class="relative z-10">
+			<Viewer />
+		</div>
+	</div>
+{/if}
