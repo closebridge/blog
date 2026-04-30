@@ -13,9 +13,9 @@
 	import Embeds from "./template/embeds.svelte";
 	import Footer from "./template/footer.svelte";
 	import Editor from "./template/editor.svelte";
-	import Viewer, {
+	import ExternalScreen, {
 		globalPopupState,
-	} from "./template/components/viewer.svelte";
+	} from "./template/components/externalScreen.svelte";
 
 	import {
 		getArticles,
@@ -173,7 +173,7 @@
 		></div>
 
 		<div class="relative z-10">
-			<Viewer />
+			<ExternalScreen />
 		</div>
 	</div>
 {/if}

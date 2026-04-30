@@ -1,7 +1,7 @@
 <script lang="ts">
 	// import Title from "./components/title.svelte";
 	import { type ArticleStructure } from "../../script/blogEndpointFetcher";
-	import { popupRecordManager } from "./viewer.svelte";
+	import { popupRecordManager } from "./externalScreen.svelte";
 	let {
 		articleIdentifier = `article-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
 		PostId,
