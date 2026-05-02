@@ -15,6 +15,7 @@
 	import Editor from "./template/editor.svelte";
 	import ExternalScreen, {
 		globalPopupState,
+		popupRecordManager,
 	} from "./template/components/externalScreen.svelte";
 
 	import {
@@ -167,10 +168,12 @@
 		id="viewerOverlay"
 		class="fixed inset-0 z-50 flex items-center justify-center"
 	>
-		<div
+		<button
+			title="close popup"
+			onclick={() => popupRecordManager("close")}
 			id="overlayBgButton"
 			class="absolute inset-0 bg-(--brand-diluted)/20 backdrop-blur-md"
-		></div>
+		></button>
 
 		<div class="relative z-10">
 			<ExternalScreen />
