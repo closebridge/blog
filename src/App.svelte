@@ -97,7 +97,10 @@
 				numberCount={3}
 				title="my articles"
 				classes="align-center"
-				extraFeature={{ icon: "edit", func: () => true }}
+				extraFeature={[
+					{ icon: "edit", func: () => true },
+					{ icon: "add", func: () => true },
+				]}
 			/>
 		{:else}
 			<Title numberCount={3} title="my articles" classes="align-center" />

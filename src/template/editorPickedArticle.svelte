@@ -3,7 +3,7 @@
 	import { getArticles } from "../script/blogEndpointFetcher";
 	import { isInEditingGetter } from "../script/editorHandler.svelte";
 	import { editBlogPageStat } from "../script/editorHandler.svelte";
-	import { popupRecordManager } from "./components/viewer.svelte";
+	import { popupRecordManager } from "./components/externalScreen.svelte";
 
 	let { postId = 0 } = $props();
 
@@ -36,10 +36,12 @@
 		<Title
 			numberCount={2}
 			title="my picked article"
-			extraFeature={{
-				icon: "edit",
-				func: () => editBlogPageStat("favepost"),
-			}}
+			extraFeature={[
+				{
+					icon: "edit",
+					func: () => editBlogPageStat("favepost"),
+				},
+			]}
 		/>
 	{:else}
 		<Title numberCount={2} title="my picked article" extraFeature={false} />

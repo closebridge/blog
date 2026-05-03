@@ -5,7 +5,7 @@
 		numberCount: number;
 		title: string;
 		classes?: string;
-		extraFeature?: false | { icon: string; func: () => boolean };
+		extraFeature?: false | Array<{ icon: string; func: () => any }>;
 	}
 
 	export const { numberCount, title, classes, extraFeature }: TitleProps =
@@ -19,14 +19,18 @@
 		</p>
 		<p id="title-header">{title}</p>
 		{#if extraFeature}
-			<button
-				onclick={async () => {
-					await extraFeature.func();
-				}}
-				class="material-symbols-rounded cursor-pointer p-4 md:p-2"
-				style="font-size: 18px; color: var(--secondary-text)"
-				>{extraFeature.icon}</button
-			>
+			<div class="flex flex-row items-center justify-center">
+				{#each extraFeature as feature}
+					<button
+						onclick={async () => {
+							await feature.func();
+						}}
+						class="material-symbols-rounded cursor-pointer p-4 md:p-2"
+						style="font-size: 18px; color: var(--secondary-text)"
+						>{feature.icon}</button
+					>
+				{/each}
+			</div>
 		{/if}
 	</div>
 </div>
