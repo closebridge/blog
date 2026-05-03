@@ -12,7 +12,6 @@
 	import TagHeatmap from "./template/tagHeatmap.svelte";
 	import Embeds from "./template/embeds.svelte";
 	import Footer from "./template/footer.svelte";
-	import Editor from "./template/editor.svelte";
 	import ExternalScreen, {
 		globalPopupState,
 		popupRecordManager,
@@ -25,7 +24,6 @@
 	import Article from "./template/components/article.svelte";
 
 	import { getPageStatus, type PageStatus } from "./script/pageStatusFetcher";
-	import { verifyForAuthentication } from "./script/blogEndpointFetcher";
 	import {
 		isInEditingGetter,
 		isInEditingSetter,
@@ -35,6 +33,8 @@
 	let favePostId: number = $state(0);
 	let pageStatusResult = $state<PageStatus | null>(null);
 
+	// edit imports
+	import editor from "./script/editor";
 	$effect(() => {
 		// This runs when component mounts
 		getPageStatus().then((result) => {
@@ -98,8 +98,15 @@
 				title="my articles"
 				classes="align-center"
 				extraFeature={[
-					{ icon: "edit", func: () => true },
-					{ icon: "add", func: () => true },
+					{
+						icon: "edit",
+						func: async () => await editor("edit"),
+					},
+					{ icon: "add", func: async () => await editor("add") },
+					{
+						icon: "delete",
+						func: async () => await editor("remove"),
+					},
 				]}
 			/>
 		{:else}
