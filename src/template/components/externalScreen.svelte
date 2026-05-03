@@ -56,18 +56,37 @@
 
 	export function popupRecordManager(
 		viewState: "open" | "close",
-		type: "article" | "editor",
-		popupRecord: ArticleStructure,
+		type?: "article" | "editor",
+		popupRecord?: ArticleStructure,
 	) {
-		if (type === "article") {
-			globalPopupState.currentVisible =
-				viewState === "open" ? true : false;
-			globalPopupState.popupComponent = "article";
-			globalPopupState.popupRecord = popupRecord;
-		} else {
+		if (popupRecord) {
+			if (type === "article") {
+				globalPopupState.currentVisible =
+					viewState === "open" ? true : false;
+				globalPopupState.popupComponent = "article";
+				globalPopupState.popupRecord = popupRecord;
+			} else if (type === "editor") {
+				globalPopupState.currentVisible =
+					viewState === "open" ? true : false;
+				globalPopupState.popupComponent = "editor";
+				globalPopupState.popupRecord = popupRecord;
+			}
+		} else if (!popupRecord && viewState === "close") {
+			// basically hidden
+			globalPopupState.currentVisible = false;
+			globalPopupState.popupComponent = null;
+			globalPopupState.popupRecord = {
+				PostId: 0,
+				Timestamp: 0,
+				Creator: "",
+				Title: "",
+				Body: "",
+				Tags: "",
+				Location: "",
+			};
 		}
 	}
-	// console.log(globalPopupState);
+	console.log(globalPopupState);
 </script>
 
 {#if globalPopupState.popupComponent == "article"}
@@ -179,7 +198,16 @@
 		</button>
 	</div>
 {:else if globalPopupState.popupComponent == "editor"}
-	<Editor />
+	<div
+		class="drop-shadow-xl bg-(--primary-element) rounded-xl max-h-[85vh] md:w-xl lg:w-2xl p-5 flex flex-col overflow-y-auto hide-scrollbar shadow-2xl border-4 border-(--brand-color)"
+	>
+		<Editor
+			editorType={globalPopupState.popupRecord.Body !== ""
+				? "edit"
+				: "add"}
+			selectedArticle={globalPopupState.popupRecord}
+		/>
+	</div>
 {/if}
 
 <style>

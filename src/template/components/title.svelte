@@ -5,7 +5,9 @@
 		numberCount: number;
 		title: string;
 		classes?: string;
-		extraFeature?: false | Array<{ icon: string; func: () => any }>;
+		extraFeature?:
+			| false
+			| Array<{ icon: string; func: () => Promise<any> }>;
 	}
 
 	export const { numberCount, title, classes, extraFeature }: TitleProps =

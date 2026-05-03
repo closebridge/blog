@@ -51,3 +51,64 @@ export async function verifyForAuthentication(
 	else if (response.status === 421) return null;
 	else return false;
 }
+
+export async function editArticle(
+	type: "edit" | "create" | "remove",
+	article: ArticleStructure,
+	authentication: number,
+	postId?: number,
+): Promise<boolean> {
+	// if (!(await verifyForAuthentication(authenticated))) return false;
+	// passcodeprompt will handle it
+
+	if (type === "create") {
+		// push to server as is
+		const response = await fetch(`${endpointDomain}/personal/blog/edit`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				action: "add",
+				articleContents: article,
+				authenticate: authentication,
+			}),
+		});
+		if (response.ok) return true;
+		else return false;
+	} else if (type === "edit") {
+		const articleExistence = await getArticles(1, article.PostId);
+		if (!articleExistence) return false;
+
+		const response = await fetch(`${endpointDomain}/personal/blog/edit`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				action: "edit",
+				articleContents: article,
+				authenticate: authentication,
+				postId: postId,
+			}),
+		});
+		if (response.ok) return true;
+		else return false;
+	} else if (type === "remove") {
+		const response = await fetch(`${endpointDomain}/personal/blog/edit`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				action: "remove",
+				articleContents: article,
+				authenticate: authentication,
+				postId: postId,
+			}),
+		});
+		if (response.ok) return true;
+		else return false;
+	}
+	return false;
+}
