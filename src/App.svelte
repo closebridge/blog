@@ -24,11 +24,9 @@
 	import Article from "./template/components/article.svelte";
 
 	import { getPageStatus, type PageStatus } from "./script/pageStatusFetcher";
-	import {
-		isInEditingGetter,
-		isInEditingSetter,
-	} from "./script/editorHandler.svelte";
+
 	import passcodePrompt from "./script/passcodePrompt";
+	import navigationHandler from "./script/navigationHandler.svelte";
 
 	let favePostId: number = $state(0);
 	let pageStatusResult = $state<PageStatus | null>(null);
@@ -42,21 +40,6 @@
 			favePostId = result.FavoritePostId;
 		});
 	});
-	const urlParms = document.location.href.split("/");
-
-	if (urlParms[urlParms.length - 1] === "edit" && !isInEditingGetter()) {
-		(async () => {
-			const result = await passcodePrompt();
-
-			if (result) {
-				isInEditingSetter(true);
-				alert("welcome me!");
-			} else if (result == null) {
-				alert("not authenticated / server fucked");
-				isInEditingSetter(false);
-			}
-		})();
-	}
 </script>
 
 <div
