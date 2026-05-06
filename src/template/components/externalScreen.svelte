@@ -231,26 +231,26 @@
 
 	:global(#p-notify-body h1) {
 		color: var(--primary-text);
-		font-size: x-large;
+		font-size: xx-large;
 		font-weight: bold;
 	}
 
 	:global(#p-notify-body h2) {
 		color: var(--primary-text);
-		font-size: large;
-		font-weight: semibold;
+		font-size: x-large;
+		font-weight: bold;
 	}
 
 	:global(#p-notify-body h3) {
 		color: var(--secondary-text);
-		font-size: medium;
-		font-weight: semibold;
+		font-size: large;
+		font-weight: bold;
 	}
 
 	:global(#p-notify-body h4) {
 		color: var(--secondary-text);
-		font-size: x-small;
-		font-weight: semibold;
+		font-size: small;
+		font-weight: bold;
 	}
 
 	:global(#p-notify-body > hr) {
@@ -284,6 +284,13 @@
 		margin: 0 auto;
 
 		width: 100%;
+	}
+	:global(#p-notify-body > table > thead) {
+		border-top: 2px solid var(--brand-color);
+	}
+	:global(#p-notify-body > table > thead)::after {
+		display: block;
+		height: 4px;
 	}
 	:global(#p-notify-body > table > tbody > tr) {
 		border-top: 2px solid var(--brand-color);
