@@ -2,7 +2,8 @@ import { endpointDomain } from "./getEndPointDomain";
 import { getPageStatus } from "./pageStatusFetcher";
 
 export type ArticleStructure = {
-	PostId: number;
+	PostId?: number;
+	postId?: number;
 	Timestamp: number;
 	Tags: string;
 	Creator: string;
@@ -84,7 +85,7 @@ export async function editArticle(
 		action: resBodyActionPretext[type],
 		articleContents: { ...article, Body: normalizedMarkdownBody },
 		authenticate: authentication,
-		postId: type === "edit" ? postId : undefined,
+		postId: postId,
 	};
 
 	const response = await fetch(`${endpointDomain}/personal/blog/edit`, {

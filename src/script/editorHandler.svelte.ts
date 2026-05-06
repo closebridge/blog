@@ -74,8 +74,6 @@ export async function editBlogPageStat(
 		return false;
 	}
 
-	console.log(payload);
-
 	const result = await fetch(`${endpointDomain}/personal/blog/info`, {
 		method: "POST",
 		headers: {
