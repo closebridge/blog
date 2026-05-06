@@ -11,6 +11,9 @@ export type ArticleStructure = {
 	Location: string;
 };
 
+// for a 99.99% service? yes.
+const isAlive: boolean = await getPageStatus();
+
 export async function getArticles(
 	amount: number = 5,
 	postId?: number,
@@ -35,7 +38,7 @@ export async function getTags(): Promise<Record<string, number> | false> {
 export async function verifyForAuthentication(
 	totp: number,
 ): Promise<boolean | null> {
-	if (!(await getPageStatus())) return null;
+	if (!isAlive) return null;
 
 	const response = await fetch(`${endpointDomain}/personal/security`, {
 		method: "POST",
@@ -58,55 +61,43 @@ export async function editArticle(
 	authentication: number,
 	postId?: number,
 ): Promise<boolean> {
+	if (!isAlive) return false;
+
 	// if (!(await verifyForAuthentication(authenticated))) return false;
 	// passcodeprompt will handle it
 
+	const resBodyActionPretext = {
+		edit: "edit",
+		create: "add",
+		remove: "remove",
+	};
+
+	const resBody = {
+		action: resBodyActionPretext[type],
+		articleContents: article,
+		authenticate: authentication,
+		postId: type === "edit" ? postId : undefined,
+	};
+
+	const response = await fetch(`${endpointDomain}/personal/blog/edit`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(resBody),
+	});
+
 	if (type === "create") {
 		// push to server as is
-		const response = await fetch(`${endpointDomain}/personal/blog/edit`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				action: "add",
-				articleContents: article,
-				authenticate: authentication,
-			}),
-		});
 		if (response.ok) return true;
 		else return false;
 	} else if (type === "edit") {
 		const articleExistence = await getArticles(1, article.PostId);
 		if (!articleExistence) return false;
 
-		const response = await fetch(`${endpointDomain}/personal/blog/edit`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				action: "edit",
-				articleContents: article,
-				authenticate: authentication,
-				postId: postId,
-			}),
-		});
 		if (response.ok) return true;
 		else return false;
 	} else if (type === "remove") {
-		const response = await fetch(`${endpointDomain}/personal/blog/edit`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				action: "remove",
-				articleContents: article,
-				authenticate: authentication,
-				postId: postId,
-			}),
-		});
 		if (response.ok) return true;
 		else return false;
 	}
