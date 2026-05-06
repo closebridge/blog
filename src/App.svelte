@@ -114,7 +114,7 @@
 		{/if}
 
 		<div class="grid grid-cols-2 items-start md:items-center gap-6 mx-4">
-			{#await getArticles(5, 0)}
+			{#await getArticles(10, 0)}
 				<p>Loading...</p>
 			{:then articles}
 				{#if articles}

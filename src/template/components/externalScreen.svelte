@@ -40,12 +40,20 @@
 
 	function renderMd(body: string): string {
 		try {
-			const normalized = body.replace(/\\n/g, "\n");
-			const renderer = new Renderer();
+			const normalized = body
+				.replace(/\\n/g, "\n")
+				.replace(/\\/g, "")
+				.replace(/\|(\s*:?-+:?\s*)\|/g, (_match, dashes) => {
+					// just in case your |---| contains " "
+					return "|" + dashes.replace(/\s+/g, "") + "|";
+				});
+			const renderer = new Renderer({
+				gfm: true,
+			});
 			renderer.image = ({ href, title, text }) => {
 				return `<img src="${href}" alt="${text}"${title ? ` title="${title}"` : ""} loading="lazy" />`;
 			};
-			const result = parse(normalized, { renderer });
+			const result = parse(normalized, { renderer, gfm: true });
 			if (typeof result !== "string") return body;
 			return result;
 		} catch {
@@ -175,8 +183,11 @@
 				>
 					{@html renderMd(globalPopupState.popupRecord.Body)}
 				</p>
-				<signing class="text-xl serif py-3">
-					>{globalPopupState.popupRecord.Creator ?? "me"}</signing
+				<span
+					class="text-xl serif py-3 block"
+					style="font-style: italic; font-weight:300;"
+				>
+					> {globalPopupState.popupRecord.Creator ?? "me"}</span
 				>
 				<!-- <img
 				src="https://share.valhalladev.org/raw/45076da80ff080aed9e1.jpg"
@@ -221,21 +232,25 @@
 	:global(#p-notify-body h1) {
 		color: var(--primary-text);
 		font-size: x-large;
+		font-weight: bold;
 	}
 
 	:global(#p-notify-body h2) {
 		color: var(--primary-text);
 		font-size: large;
+		font-weight: semibold;
 	}
 
 	:global(#p-notify-body h3) {
 		color: var(--secondary-text);
 		font-size: medium;
+		font-weight: semibold;
 	}
 
 	:global(#p-notify-body h4) {
 		color: var(--secondary-text);
 		font-size: x-small;
+		font-weight: semibold;
 	}
 
 	:global(#p-notify-body > hr) {
@@ -257,8 +272,8 @@
 
 	:global(#p-notify-body > p > img) {
 		outline: 4px solid var(--brand-color);
-		outline-offset: 2px;
 		border-radius: 0.75rem;
+		padding: 4px;
 	}
 
 	:global(#p-notify-body > table) {
@@ -268,7 +283,7 @@
 		border-radius: 5px;
 		margin: 0 auto;
 
-		width: 75%;
+		width: 100%;
 	}
 	:global(#p-notify-body > table > tbody > tr) {
 		border-top: 2px solid var(--brand-color);

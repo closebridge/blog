@@ -43,7 +43,7 @@
 			Title: currentTitle,
 			Tags: currentTags,
 			Location: currentLocation,
-			Body: easyMde.value().replace("\n", "\\n"),
+			Body: easyMde.codemirror.getValue().replace("\n", "\\n"),
 		};
 
 		console.log(editorType);

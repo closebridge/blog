@@ -72,9 +72,17 @@ export async function editArticle(
 		remove: "remove",
 	};
 
+	const normalizedMarkdownBody = article.Body.trim()
+		.replace(/\r\n/g, "\n")
+		.replace(/[ \t]+$/gm, "")
+		.replace(/\n{3,}/g, "\n\n")
+		.replace(/\t/g, "    ")
+		.replace(/\u00a0/g, " ")
+		.normalize("NFC");
+
 	const resBody = {
 		action: resBodyActionPretext[type],
-		articleContents: article,
+		articleContents: { ...article, Body: normalizedMarkdownBody },
 		authenticate: authentication,
 		postId: type === "edit" ? postId : undefined,
 	};
