@@ -57,5 +57,25 @@ export default function navigationHandler(pageUrl: string) {
 				}
 			})();
 		}
+	} else {
+		popupRecordManager("close", "article", {
+			PostId: 0,
+			Timestamp: 0,
+			Creator: "",
+			Title: "",
+			Body: "",
+			Tags: "",
+			Location: "",
+		});
 	}
 }
+
+export function navigateTo(url: string) {
+	console.log(url);
+	history.pushState(null, "", url);
+	navigationHandler(document.location.href);
+}
+
+window.addEventListener("popstate", function () {
+	navigationHandler(document.location.href);
+});
