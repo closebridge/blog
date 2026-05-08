@@ -81,9 +81,9 @@ export const onRequest: PagesFunction = async (context) => {
 			.replace(/[#*_~>`|\-]{1,3}/g, "") // headers, bold, italic, strikethrough, code, blockquotes
 			.replace(/\n{3,}/g, "  ") // collapse 3+ newlines into 3 spaces
 			.replace(/^\s+|\s+$/gm, "") // trim each line
-			.split("\n")
+			.split(" ")
 			.map((line) => line.replace(/\s+/g, " "))
-			.join("\n")
+			.join(" ")
 			.trim();
 
 	const body = stripMarkdown(postData.Body).slice(0, 256) + "...";
