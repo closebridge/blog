@@ -1,7 +1,18 @@
 import type { PagesFunction } from "@cloudflare/workers-types";
-import { endpointDomain, getArticles } from "./endpointFetcher";
+
+const endpointDomain = "https://api.nogisoft.work";
 
 type MainParm = "edit" | "blog";
+export type ArticleStructure = {
+	PostId?: number;
+	postId?: number;
+	Timestamp: number;
+	Tags: string;
+	Creator: string;
+	Title: string;
+	Body: string;
+	Location: string;
+};
 
 export const onRequest: PagesFunction = async (context: PagesFunction) => {
 	const requestUrl: string = context.request.url;
@@ -36,6 +47,9 @@ export const onRequest: PagesFunction = async (context: PagesFunction) => {
 		</html>
 	`;
 
+	if (section !== "blog")
+		return new Response(htmlRes, { headers: { "Content-Type": "text/html" } });
+
 	if (key !== "postId")
 		return new Response(htmlRes, { headers: { "Content-Type": "text/html" } });
 	if (isNaN(Number(id)) || Number(id) < 1)
@@ -50,7 +64,7 @@ export const onRequest: PagesFunction = async (context: PagesFunction) => {
 	const creationTimestamp = postData.Timestamp;
 	const title = postData.Title.slice(0, 256) + "...";
 	const body = postData.Body.slice(0, 256) + "...";
-	const tags = postData.Tags;
+	// const tags = postData.Tags;
 	const hasImage = (blogBody: string) => {
 		// regex to find cdn img urls, then use the first one
 		// also use placeholder if none
@@ -92,3 +106,17 @@ export const onRequest: PagesFunction = async (context: PagesFunction) => {
 		},
 	});
 };
+
+export async function getArticles(
+	postId?: number,
+	tags?: string,
+): Promise<Array<ArticleStructure> | false> {
+	console.log(
+		`${endpointDomain}/personal/blog/json?${postId ? "&postId=" + postId : ""}${tags ? "&tags=" + tags : ""}`,
+	);
+	const response = await fetch(
+		`${endpointDomain}/personal/blog/json?${postId ? "&postId=" + postId : ""}${tags ? "&tags=" + tags : ""}`,
+	);
+	if (response.ok) return JSON.parse(await response.text());
+	else return false;
+}
