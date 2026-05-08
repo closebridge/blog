@@ -28,7 +28,9 @@
 		isInEditingGetter,
 		isInEditingSetter,
 	} from "./script/editorHandler.svelte";
+
 	import passcodePrompt from "./script/passcodePrompt";
+	import navigationHandler from "./script/navigationHandler";
 
 	let favePostId: number = $state(0);
 	let pageStatusResult = $state<PageStatus | null>(null);
@@ -42,21 +44,8 @@
 			favePostId = result.FavoritePostId;
 		});
 	});
-	const urlParms = document.location.href.split("/");
 
-	if (urlParms[urlParms.length - 1] === "edit" && !isInEditingGetter()) {
-		(async () => {
-			const result = await passcodePrompt();
-
-			if (result) {
-				isInEditingSetter(true);
-				alert("welcome me!");
-			} else if (result == null) {
-				alert("not authenticated / server fucked");
-				isInEditingSetter(false);
-			}
-		})();
-	}
+	navigationHandler(document.location.href);
 </script>
 
 <div
@@ -119,7 +108,7 @@
 			{:then articles}
 				{#if articles}
 					{#each articles as article}
-						{console.log(article)}
+						<!-- {console.log(article)} -->
 						<Article
 							PostId={article.PostId}
 							Timestamp={article.Timestamp}

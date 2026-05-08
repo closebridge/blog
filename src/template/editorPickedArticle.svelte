@@ -4,6 +4,7 @@
 	import { isInEditingGetter } from "../script/editorHandler.svelte";
 	import { editBlogPageStat } from "../script/editorHandler.svelte";
 	import { popupRecordManager } from "./components/externalScreen.svelte";
+	import { navigateTo } from "../script/navigationHandler";
 
 	let { postId = 0 } = $props();
 
@@ -58,8 +59,10 @@
 				<button
 					onmouseenter={() => offsetImage("in")}
 					onmouseleave={() => offsetImage("out")}
-					onclick={() =>
-						popupRecordManager("open", "article", article)}
+					onclick={() => {
+						// popupRecordManager("open", "article", article)}
+						navigateTo(`/blog?postId=${article.PostId}`);
+					}}
 					class="w-fit cursor-pointer relative bg-(--primary-element)/75 hover:bg-(--primary-element)/90 outline-2 outline-(--brand-color)/50 hover:outline-(--brand-color) hover:outline-4 special-rounded px-2 py-3"
 				>
 					<div id="picked-title" class="w-[256px] *:px-2 text-start">
