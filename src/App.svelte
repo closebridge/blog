@@ -30,7 +30,7 @@
 	} from "./script/editorHandler.svelte";
 
 	import passcodePrompt from "./script/passcodePrompt";
-	import navigationHandler from "./script/navigationHandler";
+	import navigationHandler, { navigateTo } from "./script/navigationHandler";
 
 	let favePostId: number = $state(0);
 	let pageStatusResult = $state<PageStatus | null>(null);
@@ -169,7 +169,7 @@
 	>
 		<button
 			title="close popup"
-			onclick={() => popupRecordManager("close")}
+			onclick={() => navigateTo("/")}
 			id="overlayBgButton"
 			class="absolute inset-0 bg-(--brand-diluted)/20 backdrop-blur-md"
 		></button>
