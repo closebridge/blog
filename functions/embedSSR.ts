@@ -1,0 +1,94 @@
+import type { PagesFunction } from "@cloudflare/workers-types";
+import { endpointDomain, getArticles } from "./endpointFetcher";
+
+type MainParm = "edit" | "blog";
+
+export const onRequest: PagesFunction = async (context: PagesFunction) => {
+	const requestUrl: string = context.request.url;
+
+	const url = new URL(requestUrl);
+	const section = url.pathname.split("/").pop() as MainParm;
+	const args = url.search.split("?").pop();
+
+	if (!args) return null;
+	const [key, id] = args.split("=");
+
+	let htmlRes = `<!DOCTYPE html>
+		<html>
+		<head>
+			<meta property="og:title" content="nogc's blog" />
+			<meta
+				property="og:description"
+				content="larper @ work, take a lokk rok somethign idk XDD"
+			/>
+			<meta property="og:site_name" content="nogc's site" />
+			<meta
+				property="og:image"
+				content="https://blog.nogisoft.work/static/whoisthis.png"
+			/>
+			<meta property="og:url" content="https://blog.nogisoft.work" />
+			<meta property="og:image" content="https://blog.nogisoft.work" />
+			<meta name="theme-color" content="#d49742" />
+			<title>nogc's blog</title>
+		</head>
+		<body>
+		</body>
+		</html>
+	`;
+
+	if (key !== "postId")
+		return new Response(htmlRes, { headers: { "Content-Type": "text/html" } });
+	if (isNaN(Number(id)) || Number(id) < 1)
+		return new Response(htmlRes, { headers: { "Content-Type": "text/html" } });
+
+	const article = (await getArticles(Number(id))) ?? false;
+	if (!article)
+		return new Response(htmlRes, { headers: { "Content-Type": "text/html" } });
+	const postData = article[0];
+
+	const author = postData.Creator;
+	const creationTimestamp = postData.Timestamp;
+	const title = postData.Title.slice(0, 256) + "...";
+	const body = postData.Body.slice(0, 256) + "...";
+	const tags = postData.Tags;
+	const hasImage = (blogBody: string) => {
+		// regex to find cdn img urls, then use the first one
+		// also use placeholder if none
+		const imageRegex =
+			/https?:\/\/[^\s]+\.(?:jpg|jpeg|png|gif|webp|svg|avif|bmp|tiff)(?:\?[^\s]*)?/gi;
+		const matches = blogBody.match(imageRegex);
+		if (matches && matches.length > 0) {
+			return matches[0];
+		}
+		return "https://blog.nogisoft.work/static/whoisthis.png";
+	};
+
+	htmlRes = `<!DOCTYPE html>
+			<html>
+			<head>
+				<meta property="og:timestamp" content="${creationTimestamp}" />
+				<meta property="og:title" content="${title}" />
+				<meta
+					property="og:description"
+					content="${body}"
+				/>
+				<meta property="og:site_name" content="nogc's site" />
+				<meta property="og:footer" content="${author}" />
+				<meta
+					property="og:image"
+					content="${hasImage(postData.Body)}"
+				/>
+				<meta property="og:url" content="https://blog.nogisoft.work" />
+				<meta name="theme-color" content="#d49742" />
+			</head>
+			<body>
+
+			</body>
+			</html>
+		`;
+	return new Response(htmlRes, {
+		headers: {
+			"Content-Type": "text/html",
+		},
+	});
+};
