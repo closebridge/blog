@@ -24,6 +24,10 @@
 	import Article from "./template/components/article.svelte";
 
 	import { getPageStatus, type PageStatus } from "./script/pageStatusFetcher";
+	import {
+		isInEditingGetter,
+		isInEditingSetter,
+	} from "./script/editorHandler.svelte";
 
 	import passcodePrompt from "./script/passcodePrompt";
 	import navigationHandler from "./script/navigationHandler.svelte";
@@ -40,6 +44,8 @@
 			favePostId = result.FavoritePostId;
 		});
 	});
+
+	navigationHandler(document.location.href);
 </script>
 
 <div
@@ -102,7 +108,7 @@
 			{:then articles}
 				{#if articles}
 					{#each articles as article}
-						{console.log(article)}
+						<!-- {console.log(article)} -->
 						<Article
 							PostId={article.PostId}
 							Timestamp={article.Timestamp}

@@ -1,6 +1,6 @@
 <script>
 	import { isInEditingGetter } from "../script/editorHandler.svelte";
-	import { popupRecordManager } from "./components/externalScreen.svelte";
+	// import { popupRecordManager } from "./components/externalScreen.svelte";
 </script>
 
 <header
@@ -22,10 +22,10 @@
 		<div class="flex flex-row gap-3 items-center justify-center"></div>
 	</div>
 	<div class="md:block disabled"></div>
-	<button
+	<!-- <button
 		onclick={() =>
-			popupRecordManager("open", "editor", {
-				PostId: 1,
+			popupRecordManager("open", "article", {
+				PostId: 0,
 				Timestamp: 0,
 				Creator: "",
 				Title: "",
@@ -34,5 +34,5 @@
 				Location: "",
 			})}
 		class="md:block p-3 cursor-pointer">...</button
-	>
+	> -->
 </header>
