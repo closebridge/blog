@@ -31,7 +31,7 @@ export default function navigationHandler(pageUrl: string) {
 		if (key === "postId") {
 			// call popup to view article
 			(async () => {
-				if (isNaN(Number(id)) && Number(id) < 1) return false;
+				if (isNaN(Number(id)) || Number(id) < 1) return false;
 				const article = (await getArticles(1, Number(id))) ?? false;
 				if (!article) {
 					popupRecordManager("open", "article", {
