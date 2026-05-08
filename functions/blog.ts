@@ -15,8 +15,17 @@ export type ArticleStructure = {
 };
 
 export const onRequest: PagesFunction = async (context) => {
-	const requestUrl: string = context.request.url;
+	const ua = context.request.headers.get("User-Agent") ?? "";
+	const isBot =
+		/discordbot|twitterbot|facebookexternalhit|slack|telegram/i.test(ua);
 
+	if (!isBot) {
+		// redirect to the spa root, spa handles routing
+		const origin = new URL(context.request.url).origin;
+		return Response.redirect(origin, 302);
+	}
+
+	const requestUrl: string = context.request.url;
 	const url = new URL(requestUrl);
 	const section = url.pathname.split("/").pop() as MainParm;
 
@@ -70,7 +79,7 @@ export const onRequest: PagesFunction = async (context) => {
 			.replace(/!\[[^\]]*\]\([^)]+\)/g, "") // images
 			.replace(/\[[^\]]*\]\([^)]+\)/g, "$1") // links to text
 			.replace(/[#*_~>`|\-]{1,3}/g, "") // headers, bold, italic, strikethrough, code, blockquotes
-			.replace(/\n{3,}/g, "\n\n") // collapse 3+ newlines into paragraph break
+			.replace(/\n{3,}/g, "  ") // collapse 3+ newlines into 3 spaces
 			.replace(/^\s+|\s+$/gm, "") // trim each line
 			.split("\n")
 			.map((line) => line.replace(/\s+/g, " "))
@@ -111,6 +120,7 @@ export const onRequest: PagesFunction = async (context) => {
 		</body>
 		</html>
 	`;
+
 	return new Response(htmlRes, {
 		headers: {
 			"Content-Type": "text/html",
