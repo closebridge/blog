@@ -7,6 +7,7 @@
 	import { parse, Renderer } from "marked";
 	import { type ArticleStructure } from "../../script/blogEndpointFetcher";
 	import Editor from "../editor.svelte";
+	import { navigateTo } from "../../script/navigationHandler";
 
 	// interface articleData {
 	// 	id: number;
@@ -214,12 +215,13 @@
 
 		<button
 			class="bg-(--secondary-element) primary-text py-2 rounded-lg sticky bottom-2 left-1/2 cursor-pointer"
-			onclick={() =>
-				popupRecordManager(
-					"close",
-					"article",
-					globalPopupState.popupRecord,
-				)}
+			onclick={() => {
+				// popupRecordManager(
+				// 	"close",
+				// 	"article",
+				// 	globalPopupState.popupRecord,
+				navigateTo("/");
+			}}
 		>
 			okay
 		</button>
