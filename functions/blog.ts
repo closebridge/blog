@@ -14,31 +14,20 @@ export type ArticleStructure = {
 	Location: string;
 };
 
-export const onRequest: PagesFunction = async (context: PagesFunction) => {
+export const onRequest: PagesFunction = async (context) => {
 	const requestUrl: string = context.request.url;
 
 	const url = new URL(requestUrl);
 	const section = url.pathname.split("/").pop() as MainParm;
-	const args = url.search.split("?").pop();
-
-	if (!args) return null;
-	const [key, id] = args.split("=");
 
 	let htmlRes = `<!DOCTYPE html>
 		<html>
 		<head>
 			<meta property="og:title" content="nogc's blog" />
-			<meta
-				property="og:description"
-				content="larper @ work, take a lokk rok somethign idk XDD"
-			/>
+			<meta property="og:description" content="larper @ work, take a lokk rok somethign idk XDD" />
 			<meta property="og:site_name" content="nogc's site" />
-			<meta
-				property="og:image"
-				content="https://blog.nogisoft.work/static/whoisthis.png"
-			/>
+			<meta property="og:image" content="https://blog.nogisoft.work/static/whoisthis.png" />
 			<meta property="og:url" content="https://blog.nogisoft.work" />
-			<meta property="og:image" content="https://blog.nogisoft.work" />
 			<meta name="theme-color" content="#d49742" />
 			<title>nogc's blog</title>
 		</head>
@@ -49,6 +38,12 @@ export const onRequest: PagesFunction = async (context: PagesFunction) => {
 
 	if (section !== "blog")
 		return new Response(htmlRes, { headers: { "Content-Type": "text/html" } });
+
+	const args = url.search.split("?").pop();
+	if (!args)
+		return new Response(htmlRes, { headers: { "Content-Type": "text/html" } });
+
+	const [key, id] = args.split("=");
 
 	if (key !== "postId")
 		return new Response(htmlRes, { headers: { "Content-Type": "text/html" } });
@@ -62,8 +57,28 @@ export const onRequest: PagesFunction = async (context: PagesFunction) => {
 
 	const author = postData.Creator;
 	const creationTimestamp = postData.Timestamp;
+	const dateObj = new Date(creationTimestamp * 1000);
+	const isoDate = dateObj.toISOString();
+	const readableDate = dateObj.toLocaleDateString("en-US", {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	});
 	const title = postData.Title.slice(0, 256) + "...";
-	const body = postData.Body.slice(0, 256) + "...";
+	const stripMarkdown = (md: string) =>
+		md
+			.replace(/!\[[^\]]*\]\([^)]+\)/g, "") // images
+			.replace(/\[[^\]]*\]\([^)]+\)/g, "$1") // links to text
+			.replace(/[#*_~>`|\-]{1,3}/g, "") // headers, bold, italic, strikethrough, code, blockquotes
+			.replace(/\n{3,}/g, "\n\n") // collapse 3+ newlines into paragraph break
+			.replace(/^\s+|\s+$/gm, "") // trim each line
+			.split("\n")
+			.map((line) => line.replace(/\s+/g, " "))
+			.join("\n")
+			.trim();
+
+	const body = stripMarkdown(postData.Body).slice(0, 256) + "...";
+	const bodyForMeta = body.replace(/\n/g, "&#10;");
 	// const tags = postData.Tags;
 	const hasImage = (blogBody: string) => {
 		// regex to find cdn img urls, then use the first one
@@ -78,28 +93,24 @@ export const onRequest: PagesFunction = async (context: PagesFunction) => {
 	};
 
 	htmlRes = `<!DOCTYPE html>
-			<html>
-			<head>
-				<meta property="og:timestamp" content="${creationTimestamp}" />
-				<meta property="og:title" content="${title}" />
-				<meta
-					property="og:description"
-					content="${body}"
-				/>
-				<meta property="og:site_name" content="nogc's site" />
-				<meta property="og:footer" content="${author}" />
-				<meta
-					property="og:image"
-					content="${hasImage(postData.Body)}"
-				/>
-				<meta property="og:url" content="https://blog.nogisoft.work" />
-				<meta name="theme-color" content="#d49742" />
-			</head>
-			<body>
-
-			</body>
-			</html>
-		`;
+		<html>
+		<head>
+			<meta property="og:title" content="${title}" />
+			<meta property="og:description" content="${bodyForMeta}" />
+			<meta property="og:site_name" content="nogc's site" />
+			<meta property="article:author" content="${author}" />
+			<meta property="article:published_time" content="${isoDate}" />
+			<meta property="og:image" content="${hasImage(postData.Body)}" />
+			<meta property="og:url" content="https://blog.nogisoft.work" />
+			<meta name="theme-color" content="#d49742" />
+			<title>${title}</title>
+		</head>
+		<body>
+			<p>${author} &middot; ${readableDate}</p>
+			<p>${body.replace(/\n/g, "<br>")}</p>
+		</body>
+		</html>
+	`;
 	return new Response(htmlRes, {
 		headers: {
 			"Content-Type": "text/html",
