@@ -20,9 +20,8 @@ export const onRequest: PagesFunction = async (context) => {
 		/discordbot|twitterbot|facebookexternalhit|slack|telegram/i.test(ua);
 
 	if (!isBot) {
-		// redirect to requested url, spa handles routing
-		const reqUrl = new URL(context.request.url).href;
-		return Response.redirect(reqUrl, 302);
+		// dont do anything.
+		return context.next();
 	}
 
 	const requestUrl: string = context.request.url;
