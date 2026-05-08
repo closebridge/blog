@@ -30,7 +30,7 @@
 	} from "./script/editorHandler.svelte";
 
 	import passcodePrompt from "./script/passcodePrompt";
-	import navigationHandler from "./script/navigationHandler.svelte";
+	import navigationHandler from "./script/navigationHandler";
 
 	let favePostId: number = $state(0);
 	let pageStatusResult = $state<PageStatus | null>(null);
