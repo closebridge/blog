@@ -46,6 +46,13 @@
 	});
 
 	navigationHandler(document.location.href);
+
+	window.addEventListener("beforeunload", (event) => {
+		if (isInEditingGetter()) {
+			event.preventDefault();
+			event.returnValue = "unsaved changes";
+		}
+	});
 </script>
 
 <div

@@ -8,7 +8,11 @@ export type PageStatus = {
 };
 
 export async function getPageStatus() {
-	const response = await fetch(`${endpointDomain}/personal/blog/info`);
-	if (response.ok) return JSON.parse(await response.text());
-	else return false;
+	try {
+		const response = await fetch(`${endpointDomain}/personal/blog/info`);
+		if (response.ok) return JSON.parse(await response.text());
+		else return false;
+	} catch {
+		return false;
+	}
 }
