@@ -24,12 +24,9 @@
 	import Article from "./template/components/article.svelte";
 
 	import { getPageStatus, type PageStatus } from "./script/pageStatusFetcher";
-	import {
-		isInEditingGetter,
-		isInEditingSetter,
-	} from "./script/editorHandler.svelte";
+	import { isInEditingGetter } from "./script/editorHandler.svelte";
+	import titleHandler from "./script/titleHandler";
 
-	import passcodePrompt from "./script/passcodePrompt";
 	import navigationHandler, { navigateTo } from "./script/navigationHandler";
 
 	let favePostId: number = $state(0);
@@ -43,6 +40,8 @@
 			pageStatusResult = result;
 			favePostId = result.FavoritePostId;
 		});
+
+		if (!titleHandler("home")) return;
 	});
 
 	navigationHandler(document.location.href);

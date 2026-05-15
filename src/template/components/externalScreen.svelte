@@ -8,6 +8,7 @@
 	import { type ArticleStructure } from "../../script/blogEndpointFetcher";
 	import Editor from "../editor.svelte";
 	import { navigateTo } from "../../script/navigationHandler";
+	import titleHandler from "../../script/titleHandler";
 
 	// interface articleData {
 	// 	id: number;
@@ -70,17 +71,20 @@
 	) {
 		if (popupRecord) {
 			if (type === "article") {
+				if (!titleHandler(popupRecord.Title)) return;
 				globalPopupState.currentVisible =
 					viewState === "open" ? true : false;
 				globalPopupState.popupComponent = "article";
 				globalPopupState.popupRecord = popupRecord;
 			} else if (type === "editor") {
+				if (!titleHandler("editing...")) return;
 				globalPopupState.currentVisible =
 					viewState === "open" ? true : false;
 				globalPopupState.popupComponent = "editor";
 				globalPopupState.popupRecord = popupRecord;
 			}
 		} else if (!popupRecord && viewState === "close") {
+			if (!titleHandler("home")) return;
 			// basically hidden
 			globalPopupState.currentVisible = false;
 			globalPopupState.popupComponent = null;
@@ -95,7 +99,7 @@
 			};
 		}
 	}
-	console.log(globalPopupState);
+	// console.log(globalPopupState);
 </script>
 
 {#if globalPopupState.popupComponent == "article"}
