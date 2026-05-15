@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build",
+		"build": "vite build && cp dist/assets/index-*.css dist/nojs.css",
 		"preview": "vite preview",
 		"preview:ssr": "pnpm run build && pnpx wrangler pages dev ./dist ",
 		"check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"

@@ -29,7 +29,7 @@
 			property="og:description"
 			content="larper @ work, take a lokk rok somethign idk XDD"
 		/>
-		<meta property="og:site_name" content="nogc's site" />
+		<!--<meta property="og:site_name" content="nogc's site" />-->
 		<meta
 			property="og:image"
 			content="https://blog.nogisoft.work/static/whoisthis.png"
@@ -41,12 +41,25 @@
 		<title>nogc's blog</title>
 	</head>
 	<body style="background: var(--background)">
-		<noscript>
-			Modern solution requires modern toolsets-- Please use a browser with
-			JavaScript support (ES6)!
+		<noscript
+			style="
+				font-size: xx-large;
+				color: var(--primary-text);
+				background: var(--primary-element);
+			"
+		>
+			no javascript in the big '26? come on...
+			<br /><br />
+			ssr page? access it
+			<a
+				style="display: inline; text-decoration: underline; color: blue"
+				href="https://blog.nogisoft.work/nojs"
+				>here</a
+			>
 			<br />
-			Giải Pháp hiện đại cần phải có các công cụ hiện đại-- Xin hãy sử
-			dụng trình duyệt có hỗ trợ JavaScript (ES6)
+			<p style="font-style: italic; font-weight: 300; display: block">
+				(i wont recommend it doe :3)
+			</p>
 		</noscript>
 		<div id="app"></div>
 		<script type="module" src="/src/main.ts"></script>

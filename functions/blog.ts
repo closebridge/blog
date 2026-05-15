@@ -55,6 +55,7 @@ function defaultPage(
 	`;
 }
 
+// @ts-ignore
 export const onRequest: PagesFunction = async (context) => {
 	const ua = context.request.headers.get("User-Agent") ?? "";
 	const isBot =
