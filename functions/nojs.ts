@@ -48,8 +48,11 @@ export const onRequest: PagesFunction = async (context) => {
 		];
 
 		const matchesToken =
-			// oldBrowserMatch.some((token) => browserHeader.includes(token)) &&
-			/^mozilla\/[1-4]\./i.test(browserHeader.toLowerCase()) ? true : false;
+			oldBrowserMatch.some((token) =>
+				browserHeader.toLowerCase().includes(token),
+			) && /^mozilla\/[1-4]\./i.test(browserHeader.toLowerCase())
+				? true
+				: false;
 
 		return matchesToken;
 	};
@@ -260,7 +263,7 @@ async function renderHTML(
 			${renderTitle(2, "my picked article", isLegacyBrowser)}
 				<div>
 					<a class="w-fit cursor-pointer relative bg-(--primary-element)/75 hover:bg-(--primary-element)/90 outline-2 outline-(--brand-color)/50 hover:outline-(--brand-color) hover:outline-4 special-rounded px-2 py-3"
-					href="/blog?postId=${favoriteArticle[0].PostId}">
+					href="/nojs?postId=${favoriteArticle[0].PostId}">
 						<div id="picked-title" class="w-[256px] *:px-2 text-start">
 							<p
 								class="secondary-text text-sm"
@@ -440,7 +443,7 @@ async function renderHTML(
 				</tr>
 			</table>
 			`);
-	const heatTag = !isLegacyBrowser
+	const tagHeatmap = !isLegacyBrowser
 		? htmlBody.append(`
 		<div>
 			${renderTitle(4, "my tag heatmap", isLegacyBrowser)}
@@ -449,19 +452,22 @@ async function renderHTML(
 					id="heattag-parent"
 					class="flex flex-wrap justify-center items-center pt-2 md:pt-10 gap-1"
 				>
-				${await getTagHeatmap(isLegacyBrowser)}
+					${await getTagHeatmap(isLegacyBrowser)}
 				</div>
 			</div>
 			</div>
 
 		`)
-		: htmlBody.append(` <br><br>
-			${renderTitle(3, "my tag heatmap", isLegacyBrowser)}
+		: htmlBody.append(`<br><br>
+		${renderTitle(3, "my tag heatmap", isLegacyBrowser)}
 
-			<table border="0" cellpadding="4">
+		<table border="0" cellpadding="6" cellspacing="6">
+			<tr>
 				${await getTagHeatmap(isLegacyBrowser)}
-			</table>
-		`);
+			</tr>
+		</table>
+	`);
+
 	const embeds = !isLegacyBrowser
 		? htmlBody.append(`<br><br>
 			<div class=" w-full">
@@ -631,7 +637,7 @@ function extractFirstImage(body: string): string {
 
 function renderTitle(num: number, title: string, legacy: boolean) {
 	return legacy
-		? `<p><font color="#d89a2b"><b>0${num}.</b></font><font color="#777777"><b> ${title}</b></font></p>`
+		? `<td><p><font color="#d89a2b"><b>0${num}.</b></font><font color="#777777"><b> ${title}</b></font></p></td>`
 		: `<div class="secondary-text *:inline mb-3">
 				<p id="counting-seg" class="text-(--brand-color) mono">
 				0${num}.</p>
