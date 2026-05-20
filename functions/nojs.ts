@@ -2,6 +2,7 @@ import type { PagesFunction } from "@cloudflare/workers-types";
 import * as cheerio from "cheerio";
 import { getArticles } from "./shared/getArticles";
 import { ArticleStructure } from "./shared/articleStructure";
+import { parse, Renderer } from "marked";
 
 // tl-dr(review): we got reactjs at home 😭🙏 (i call this "miBomboclatta UI lib 😎")
 // SHOULDVE USE SVELTEKIT INSTEAD LMFAO
@@ -56,21 +57,38 @@ export const onRequest: PagesFunction = async (context) => {
 
 		return matchesToken;
 	};
+	const legacyBrowser = isLegacyBrowser();
 
-	if (requestedPostId) {
+	console.log("requestedPostId?", requestedPostId);
+
+	if (requestedPostId && !isNaN(Number(requestedPostId))) {
 		// requested for one, in article rn
-	} else {
-		// empty, basically @ home nav
+		const requestedArticle = await getArticles(Number(requestedPostId));
 
-		const legacyBrowser = isLegacyBrowser();
-		console.log("legacyBrowser", legacyBrowser);
-		if (legacyBrowser) {
-			return new Response(await renderHTML("home", null, legacyBrowser), {
+		if (requestedArticle == null || Number(requestedPostId) === 0) {
+			return new Response(await renderHTML("article", null, legacyBrowser), {
 				status: 200,
 				headers: { "content-type": "text/html" },
 			});
 		}
 
+		return new Response(
+			await renderHTML(
+				"article",
+				requestedArticle ? requestedArticle[0] : null,
+				legacyBrowser,
+			),
+			{
+				status: 200,
+				headers: { "content-type": "text/html" },
+			},
+		);
+	}
+
+	if (!requestedPostId) {
+		// empty, basically @ home nav
+
+		console.log("legacyBrowser", legacyBrowser);
 		return new Response(await renderHTML("home", null, legacyBrowser), {
 			status: 200,
 			headers: { "content-type": "text/html" },
@@ -93,49 +111,49 @@ async function renderHTML(
 	isLegacyBrowser: boolean = false,
 ): Promise<string> {
 	const baseHTML = `
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+		<!doctype html>
+		<html lang="en">
+			<head>
+				<meta charset="UTF-8" />
+				<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
 
-		<link rel="stylesheet" href="/assets/index--nojs.css" />
+				<link rel="stylesheet" href="/assets/index--nojs.css" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
-		/>
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
-		/>
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<link rel="preconnect" href="https://fonts.googleapis.com" />
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+				/>
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+				<link
+					href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap"
+					rel="stylesheet"
+				/>
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+				/>
 
-		<!-- Embeds -->
-		<meta property="og:title" content="nogc's blog" />
-		<meta
-			property="og:description"
-			content="larper @ work, take a lokk rok somethign idk XDD"
-		/>
-		<meta
-			property="og:image"
-			content="https://blog.nogisoft.work/static/whoisthis.png"
-		/>
-		<meta property="og:url" content="https://blog.nogisoft.work" />
-		<meta property="og:image" content="https://blog.nogisoft.work" />
-		<meta name="theme-color" content="#d49742" />
+				<!-- Embeds -->
+				<meta property="og:title" content="nogc's blog" />
+				<meta
+					property="og:description"
+					content="larper @ work, take a lokk rok somethign idk XDD"
+				/>
+				<meta
+					property="og:image"
+					content="https://blog.nogisoft.work/static/whoisthis.png"
+				/>
+				<meta property="og:url" content="https://blog.nogisoft.work" />
+				<meta property="og:image" content="https://blog.nogisoft.work" />
+				<meta name="theme-color" content="#d49742" />
 
-		<title>nogc's blog</title>
-	</head>
-	<body style="background: var(--background)">
-	</body>
-</html>
+				<title>nogc's blog</title>
+			</head>
+			<body style="background: var(--background)">
+			</body>
+		</html>
 		`;
 
 	const html = cheerio.load(baseHTML);
@@ -147,42 +165,44 @@ async function renderHTML(
 	}
 
 	const htmlBody = !isLegacyBrowser ? html("#appBody") : html("body");
-	const pageStatus = (await getPageStatus()) ?? {};
-	const favoriteArticlesResult = pageStatus.FavoritePostId
-		? await getArticles(pageStatus.FavoritePostId)
-		: [
-				{
-					PostId: 0,
-					postId: 0,
-					Timestamp: 0,
-					Tags: "",
-					Creator: "",
-					Title: "",
-					Body: "",
-					Location: "",
-				},
-			];
-	const favoriteArticle = Array.isArray(favoriteArticlesResult)
-		? favoriteArticlesResult
-		: [
-				{
-					PostId: 0,
-					postId: 0,
-					Timestamp: 0,
-					Tags: "",
-					Creator: "",
-					Title: "",
-					Body: "",
-					Location: "",
-				},
-			];
-	const fetchedArticlesResult = await getArticles();
-	const fetchedArticles = Array.isArray(fetchedArticlesResult)
-		? fetchedArticlesResult
-		: [];
 
-	const header = !isLegacyBrowser
-		? htmlBody.append(`
+	if (type === "home") {
+		const pageStatus = (await getPageStatus()) ?? {};
+		const favoriteArticlesResult = pageStatus.FavoritePostId
+			? await getArticles(pageStatus.FavoritePostId)
+			: [
+					{
+						PostId: 0,
+						postId: 0,
+						Timestamp: 0,
+						Tags: "",
+						Creator: "",
+						Title: "",
+						Body: "",
+						Location: "",
+					},
+				];
+		const favoriteArticle = Array.isArray(favoriteArticlesResult)
+			? favoriteArticlesResult
+			: [
+					{
+						PostId: 0,
+						postId: 0,
+						Timestamp: 0,
+						Tags: "",
+						Creator: "",
+						Title: "",
+						Body: "",
+						Location: "",
+					},
+				];
+		const fetchedArticlesResult = await getArticles();
+		const fetchedArticles = Array.isArray(fetchedArticlesResult)
+			? fetchedArticlesResult
+			: [];
+
+		const header = !isLegacyBrowser
+			? htmlBody.append(`
 			<header
 				id="blog-header"
 				class="col-span-2 flex flex-row md:justify-evenly justify-start">
@@ -198,8 +218,8 @@ async function renderHTML(
 				<div class="md:block disabled"></div>
 			</header>
 		`)
-		: htmlBody.append(
-				`<table style="font-family: Times New Roman, Times, serif" width="100%">
+			: htmlBody.append(
+					`<table style="font-family: Times New Roman, Times, serif" width="100%">
 				<tr>
 					<td>
 						<font size="6">
@@ -211,9 +231,9 @@ async function renderHTML(
 					</td>
 				</tr>
 			</table>`,
-			);
-	const latestComment = !isLegacyBrowser
-		? htmlBody.append(`
+				);
+		const latestComment = !isLegacyBrowser
+			? htmlBody.append(`
 			${renderTitle(1, "my latest comment", isLegacyBrowser)}
 			<div class="flex flex-col justify-start">
 				<p id="displayed_thought" class="primary-text text-3xl bold serif">
@@ -255,7 +275,7 @@ async function renderHTML(
 			</div>
 
 	`)
-		: htmlBody.append(`
+			: htmlBody.append(`
 			<br><br>
 			${renderTitle(1, "my latest comment", isLegacyBrowser)}
 			<table border="0" width="100%" cellpadding="4">
@@ -269,8 +289,8 @@ async function renderHTML(
 				</tr>
 			</table>
 			`);
-	const pickedArticle = !isLegacyBrowser
-		? htmlBody.append(`
+		const pickedArticle = !isLegacyBrowser
+			? htmlBody.append(`
 			${renderTitle(2, "my picked article", isLegacyBrowser)}
 				<div>
 					<a class="w-fit cursor-pointer relative bg-(--primary-element)/75 hover:bg-(--primary-element)/90 outline-2 outline-(--brand-color)/50 hover:outline-(--brand-color) hover:outline-4 special-rounded px-2 py-3"
@@ -335,9 +355,9 @@ async function renderHTML(
 					</a>
 				</div>
 			`)
-		: htmlBody.append(`<br><br>
+			: htmlBody.append(`<br><br>
 			${renderTitle(2, "my picked article", isLegacyBrowser)}
-			<a href="/blog?postId=${favoriteArticle[0].PostId}">
+			<a href="/nojs?postId=${favoriteArticle[0].PostId}">
 				<table border="1" cellpadding="6" cellspacing="1" width="280"><tr><td>
 					<font color="#777777">
 						${String(new Date(favoriteArticle[0].Timestamp).getHours()).padStart(2, "0")}:
@@ -362,8 +382,8 @@ async function renderHTML(
 				</table>
 			</a>
 			`);
-	const articles = !isLegacyBrowser
-		? htmlBody.append(`
+		const articles = !isLegacyBrowser
+			? htmlBody.append(`
 			<div class="grid grid-cols-2 items-start md:items-center gap-6 mx-4">
 				${fetchedArticles
 					.map(
@@ -434,7 +454,7 @@ async function renderHTML(
 
 			</div>
 			`)
-		: htmlBody.append(`<br><br>
+			: htmlBody.append(`<br><br>
 			${renderTitle(3, "my articles", isLegacyBrowser)}
 			<table border="0" cellpadding="10">
 				<tr>
@@ -457,8 +477,8 @@ async function renderHTML(
 				</tr>
 			</table>
 			`);
-	const tagHeatmap = !isLegacyBrowser
-		? htmlBody.append(`
+		const tagHeatmap = !isLegacyBrowser
+			? htmlBody.append(`
 		<div>
 			${renderTitle(4, "my tag heatmap", isLegacyBrowser)}
 			<div class="flex justify-center">
@@ -472,7 +492,7 @@ async function renderHTML(
 			</div>
 
 		`)
-		: htmlBody.append(`<br><br>
+			: htmlBody.append(`<br><br>
 		${renderTitle(3, "my tag heatmap", isLegacyBrowser)}
 
 		<table style="border-spacing: 4px 4px" border="0" cellpadding="6" cellspacing="6">
@@ -481,9 +501,8 @@ async function renderHTML(
 			</tr>
 		</table>
 	`);
-
-	const embeds = !isLegacyBrowser
-		? htmlBody.append(`<br><br>
+		const embeds = !isLegacyBrowser
+			? htmlBody.append(`<br><br>
 			<div class=" w-full">
 				${renderTitle(5, "embed my blog", isLegacyBrowser)}
 				<div class="flex flex-col md:flex-row items-start gap-2">
@@ -517,7 +536,7 @@ async function renderHTML(
 				</div>
 			</div>
 			`)
-		: htmlBody.append(`<br><br>
+			: htmlBody.append(`<br><br>
 			${renderTitle(5, "embed my blog", isLegacyBrowser)}
 			<table border="1" width="100%" cellpadding="8">
 				<tr>
@@ -545,7 +564,182 @@ async function renderHTML(
 			</table>
 			`);
 
-	return html.html();
+		htmlTitle.text("nogc's blog - home");
+
+		return html.html();
+	} else {
+		// if ()
+
+		const articleHTML = htmlBody.append(`
+			${articleContent ? await renderArticleViewer(articleContent, isLegacyBrowser) : await renderArticleViewer(null, isLegacyBrowser)}
+		`);
+		htmlTitle.text(`nogc's blog - ${articleContent?.Title ?? "viewing..."}`);
+
+		return html.html();
+	}
+}
+
+async function renderArticleViewer(
+	article: ArticleStructure | null,
+	legacy: boolean,
+) {
+	function renderMd(body: string): string {
+		try {
+			const normalized = body
+				.replace(/\\n/g, "\n")
+				.replace(/\\/g, "")
+				.replace(/\|(\s*:?-+:?\s*)\|/g, (_match, dashes) => {
+					return "|" + dashes.replace(/\s+/g, "") + "|";
+				});
+			const renderer = new Renderer({
+				gfm: true,
+			});
+			renderer.image = ({ href, title, text }) => {
+				return `<img src="${href}" alt="${text}"${title ? ` title="${title}"` : ""} loading="lazy" />`;
+			};
+			const result = parse(normalized, { renderer, gfm: true });
+			if (typeof result !== "string") return body;
+			return result;
+		} catch {
+			return body;
+		}
+	}
+
+	const element = () => {
+		if (!article?.PostId || !article) {
+			return !legacy
+				? `
+				<div
+					class="flex flex-col text-center serif items-center justify-center text-(--secondary-text) h-full"
+				>
+					<span class="material-symbols-rounded" style="font-size: 48px">
+						warning
+					</span>
+					<p class="serif text-2xl line-clamp-1 w-full">
+						post doesnt even exist...
+					</p>
+				</div>
+				`
+				: `
+				<h1 style="color: red">post doesnt even exist...</h1>
+			`;
+		}
+		return !legacy
+			? `
+				<div
+					class="drop-shadow-xl bg-(--primary-element) rounded-xl h-[90vh] md:w-xl lg:w-2xl p-5 flex flex-col gap-y-5 px-5 overflow-y-scroll hide-scrollbar shadow-2xl border-4 border-(--brand-color)"
+				>
+					<div
+						id="popup-detail-notify-header"
+						class="z-100 flex flex-col gap-y-3 justify-center items-start"
+					>
+						<div
+							class="flex flex-row justify-between items-center w-full bg-(--brand-diluted) py-1 rounded-lg"
+						>
+							<div class="flex flex-row justify-center items-center">
+								<span
+									class="material-symbols-rounded ignore text-[2.5rem] md:text-[3rem] primary-text ml-5"
+									style="color: var(--brand-color)"
+									>account_circle</span
+								>
+								<div class="ml-4">
+									<p
+										id="notify-author-name"
+										class="primary-text font-semibold"
+									>
+										${article?.Creator}
+									</p>
+
+									<p class="inline secondary-text text-sm">
+										${new Date(article?.Timestamp).getDate()}
+										/
+										${new Date(article?.Timestamp).getMonth()}
+										/
+										${new Date(article?.Timestamp).getFullYear()}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="flex flex-col md:flex-row items-center md:items-start">
+						<div class="md:sticky md:top-0 md:w-[35%]">
+							<div
+								class="flex flex-row md:flex-col justify-start items-center md:items-start gap-5"
+							>
+								<div
+									id="tagsContainer"
+									class="flex flex-row md:flex-col gap-2 items-center md:items-start justify-evenly"
+								>
+									${article?.Tags.split(",")
+										.map((tag) => {
+											return `<div
+											style="background: var(--bar-gradient); filter: blur(0.5px); "
+											class="px-3 py-1 rounded-full backdrop-blur-[2px] outline outline-[--brand-color]"
+										>
+											<p
+												class="inline primary-text font-bold text-xs text-nowrap md:text-base"
+											>
+												${tag}
+											</p>
+										</div>`;
+										})
+										.join("")}
+								</div>
+							</div>
+						</div>
+
+						<div
+							id="popup-detail-notify-full-message"
+							class="w-full flex flex-col items-start gap-3 md:border-l-2 md:border-(--brand-color) md:px-[6%]"
+						>
+							<p
+								id="p-notify-subject"
+								class="serif text-2xl md:text-4xl font-medium w-full text-pretty"
+							>
+								<span
+									class="serif text-(--disabled-text) font-bold pr-1"
+									>${article?.PostId}.
+								</span>
+								${article.Title}
+							</p>
+							<p
+								id="p-notify-body"
+								class="primary-text md:text-lg w-full break-pretty"
+							>
+								${renderMd(article.Body)}
+							</p>
+							<span
+								class="text-xl serif py-3 block"
+								style="font-style: italic; font-weight:300;"
+							>
+								> ${article.Creator ?? "me"}</span
+							>
+						</div>
+					</div>
+					<a
+						class="bg-(--secondary-element) primary-text py-2 rounded-lg sticky bottom-2 left-1/2 cursor-pointer"
+						href="/nojs"
+					>
+						okay
+					</a>
+				</div>
+			`
+			: `
+				<h1>${article?.Title}</h1>
+				<p>${renderMd(article?.Body)}</p>
+				<p>${article?.Timestamp}</p>
+				${article?.Tags.split(",")
+					.map((tag) => {
+						return `<p>${tag}</p>`;
+					})
+					.join("")}
+				<br><br>
+				<a href="/nojs"> okay </a>
+			`;
+	};
+
+	return element();
 }
 
 async function getTagHeatmap(legacy: boolean) {
