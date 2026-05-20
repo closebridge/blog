@@ -199,7 +199,18 @@ async function renderHTML(
 			</header>
 		`)
 		: htmlBody.append(
-				`<table width="100%"><tr><td><font size="6"><b>nogc</b></font><font size="6" color="#d89a2b"><b>@ blog</b></font></td></tr></table>`,
+				`<table style="font-family: Times New Roman, Times, serif" width="100%">
+				<tr>
+					<td>
+						<font size="6">
+							<b>nogc</b>
+						</font>
+						<font size="6" color="#d89a2b">
+							<b>@ blog</b>
+						</font>
+					</td>
+				</tr>
+			</table>`,
 			);
 	const latestComment = !isLegacyBrowser
 		? htmlBody.append(`
@@ -251,9 +262,9 @@ async function renderHTML(
 				<tr>
 					<td>
 						<font size="6"><b>" ${pageStatus.Comment ? pageStatus.Comment : "ehhh..."}</b></font><br />
-						<font color="#777777">- ${pageStatus.CommentOwner ? pageStatus.CommentOwner : "nogc"}, ${pageStatus.CommentTimestamp ? new Date(pageStatus.CommentTimestamp).getFullYear() : 2026}</font><br><br>
+						<font color="#777777">- ${pageStatus.CommentOwner ? pageStatus.CommentOwner : "nogc"}, ${pageStatus.CommentTimestamp ? new Date(pageStatus.CommentTimestamp).getFullYear() : 2026}</font><br>
 						<tt>unix timestamp: ${pageStatus.CommentTimestamp ? pageStatus.CommentTimestamp : 1776432350603}</tt><br />
-						<tt>public pgp key: <a href="my-pgp-key.txt">my-pgp-key.txt</a></tt>
+						<tt>public pgp key: <a style="text-decoration: underline" href="my-pgp-key.txt">my-pgp-key.txt</a></tt>
 					</td>
 				</tr>
 			</table>
@@ -327,7 +338,7 @@ async function renderHTML(
 		: htmlBody.append(`<br><br>
 			${renderTitle(2, "my picked article", isLegacyBrowser)}
 			<a href="/blog?postId=${favoriteArticle[0].PostId}">
-				<table border="1" cellpadding="6" cellspacing="0" width="280"><tr><td>
+				<table border="1" cellpadding="6" cellspacing="1" width="280"><tr><td>
 					<font color="#777777">
 						${String(new Date(favoriteArticle[0].Timestamp).getHours()).padStart(2, "0")}:
 						${String(new Date(favoriteArticle[0].Timestamp).getMinutes()).padStart(2, "0")} -
@@ -335,15 +346,18 @@ async function renderHTML(
 						${String(new Date(favoriteArticle[0].Timestamp).getMonth() + 1).padStart(2, "0")}/
 						${new Date(favoriteArticle[0].Timestamp).getFullYear()}
 					</font><br>
-					<font size="5"><b>${favoriteArticle[0].Title || "my picked article"}!</b></font><br><br>
-					<img src="${extractFirstImage(favoriteArticle[0].Body)}" width="260"><br><br>
-					<table border="0" cellpadding="3"><tr>
+					<font size="5"><b>${favoriteArticle[0].Title || "my picked article"}!</b></font><br>
+					<table border="1" cellpadding="3"><tr>
 						${(favoriteArticle[0].Tags || "")
 							.split(",")
 							.filter((tag) => tag.trim() !== "")
-							.map((tag) => `<td border="1"><small>${tag.trim()}</small></td>`)
+							.map(
+								(tag, index) =>
+									`<td border="1"><small> ${tag.trim()}${index === favoriteArticle[0].Tags.split(",").length - 1 ? "" : ",&nbsp;"} </small></td>`,
+							)
 							.join("")}
 					</tr></table>
+					<img src="${extractFirstImage(favoriteArticle[0].Body)}" width="260"><br>
 				</td></tr>
 				</table>
 			</a>
@@ -461,7 +475,7 @@ async function renderHTML(
 		: htmlBody.append(`<br><br>
 		${renderTitle(3, "my tag heatmap", isLegacyBrowser)}
 
-		<table border="0" cellpadding="6" cellspacing="6">
+		<table style="border-spacing: 4px 4px" border="0" cellpadding="6" cellspacing="6">
 			<tr>
 				${await getTagHeatmap(isLegacyBrowser)}
 			</tr>
@@ -588,7 +602,7 @@ async function getTagHeatmap(legacy: boolean) {
 		const tags = await getTags();
 		if (tags && typeof tags === "object" && Object.keys(tags).length > 0) {
 			return Object.entries(tags)
-				.map(([tagName, count]) => {
+				.map(([tagName, count], index) => {
 					const textSize = tagSizing(count as number, "text", legacy);
 					const opacity = tagSizing(count as number, "opacity", legacy);
 					const padding = tagSizing(count as number, "padding", legacy);
@@ -614,7 +628,11 @@ async function getTagHeatmap(legacy: boolean) {
 					</p>
 				`
 						: `
-						<td><a href="tag-${symbolEncode(tagName)}.html">${symbolEncode(tagName)}</a></td>
+						<td>
+							<p style="${textSize}">
+								${symbolEncode(tagName)} ${index !== Object.keys(tags).length - 1 ? ",&nbsp;" : ""}
+							</p>
+						</td>
 				`;
 				})
 				.join("");
