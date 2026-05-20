@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build && cp dist/assets/index-*.css dist/nojs.css",
+		"build": "vite build && cp dist/assets/index-*.css dist/assets/index--nojs.css",
 		"preview": "vite preview",
 		"preview:ssr": "pnpm run build && pnpx wrangler pages dev ./dist ",
 		"check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
@@ -23,6 +23,7 @@
 	},
 	"dependencies": {
 		"@tailwindcss/vite": "^4.2.2",
+		"cheerio": "^1.2.0",
 		"easymde": "^2.20.0",
 		"marked": "^18.0.2",
 		"tailwindcss": "^4.2.2"
