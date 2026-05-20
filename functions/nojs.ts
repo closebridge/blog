@@ -726,16 +726,28 @@ async function renderArticleViewer(
 				</div>
 			`
 			: `
+				<a href="/nojs"> <- go back to home </a>
+				<br>
+				<table width="100%" cellpadding="2" cellspacing="2" border="1">
+					<tr>
+						<td style="font-size: 10px">creator: ${article?.Creator}</td>
+						<td style="font-size: 10px">timestamp: ${new Date(article?.Timestamp).toLocaleString() ?? `sometimes in the 21st centuries`}</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							${article?.Tags.split(",")
+								.map((tag, index) => {
+									return `${index == 0 ? "tags: " : ""}${tag}${index == article?.Tags.split(",").length - 1 ? "." : ", "}`;
+								})
+								.join("")}
+						</td>
+					</tr>
+				</table>
 				<h1>${article?.Title}</h1>
 				<p>${renderMd(article?.Body)}</p>
-				<p>${article?.Timestamp}</p>
-				${article?.Tags.split(",")
-					.map((tag) => {
-						return `<p>${tag}</p>`;
-					})
-					.join("")}
-				<br><br>
-				<a href="/nojs"> okay </a>
+				<p>${article?.Creator}</p>
+				<br>
+				<a align="center" href="/nojs"> okay </a>
 			`;
 	};
 
