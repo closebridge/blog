@@ -303,9 +303,8 @@ async function renderHTML(
 		const pickedArticle = !isLegacyBrowser
 			? htmlBody.append(`
 			${renderTitle(2, "my picked article", isLegacyBrowser)}
-				<div>
-					<a class="w-fit cursor-pointer relative bg-(--primary-element)/75 hover:bg-(--primary-element)/90 outline-2 outline-(--brand-color)/50 hover:outline-(--brand-color) hover:outline-4 special-rounded px-2 py-3"
-					href="/nojs?postId=${favoriteArticle[0].PostId}">
+				<div class="cursor-pointer relative bg-(--primary-element)/75 hover:bg-(--primary-element)/90 outline-2 outline-(--brand-color)/50 hover:outline-(--brand-color) hover:outline-4 special-rounded px-2 py-3">
+					<a href="/nojs?postId=${favoriteArticle[0].PostId}">
 						<div id="picked-title" class="w-[256px] *:px-2 text-start">
 							<p
 								class="secondary-text text-sm"
@@ -401,10 +400,8 @@ async function renderHTML(
 						(article: ArticleStructure) => `
 						<a
 							id={articleIdentifier}
-
-							href="${article.PostId ? `/blog?postId=${article.PostId}` : ""}"
-							class="cursor-pointer text-start flex flex-col md:flex-row list-image-none bg-(--primary-element) special-rounded outline-1 outline-(--brand-color) w-full overflow-hidden"
->
+							href="${article.PostId ? `/nojs?postId=${article.PostId}` : ""}"
+							class="cursor-pointer text-start flex flex-col md:flex-row list-image-none bg-(--primary-element) special-rounded outline-1 outline-(--brand-color) w-full overflow-hidden">
 							<div class="w-full md:w-36 h-36 overflow-hidden special-rounded shrink-0">
 								<img
 									id="{articleIdentifier}-image"
