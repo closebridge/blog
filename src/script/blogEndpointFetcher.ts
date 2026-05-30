@@ -1,6 +1,8 @@
 import { endpointDomain } from "./getEndPointDomain";
 import { getPageStatus } from "./pageStatusFetcher";
 
+let fetchedPosts: Array<ArticleStructure> = [];
+
 export type ArticleStructure = {
 	PostId?: number;
 	postId?: number;
@@ -15,19 +17,36 @@ export type ArticleStructure = {
 // for a 99.99% service? yes.
 const isAlive: boolean = await getPageStatus();
 
+async function localFetchedPosts(
+	type: "getter" | "setter",
+	data?: Array<ArticleStructure>,
+): Promise<Array<ArticleStructure>> {
+	if (type === "getter") return fetchedPosts;
+	else {
+		fetchedPosts = (await getArticles()) || [];
+		return fetchedPosts;
+	}
+}
+
 export async function getArticles(
-	amount: number = 5,
+	amount: number = 10,
 	postId?: number,
 	tags?: string,
 ): Promise<Array<ArticleStructure> | false> {
-	console.log(
-		`${endpointDomain}/personal/blog/json?${amount ? "amount=" + amount : ""}${postId ? "&postId=" + postId : ""}${tags ? "&tags=" + tags : ""}`,
-	);
-	const response = await fetch(
-		`${endpointDomain}/personal/blog/json?${amount ? "amount=" + amount : ""}${postId ? "&postId=" + postId : ""}${tags ? "&tags=" + tags : ""}`,
-	);
-	if (response.ok) return JSON.parse(await response.text());
-	else return false;
+	const postCache = await localFetchedPosts("getter");
+	const reqPost = postCache.find((post) => post.postId === postId);
+
+	if (postId && reqPost) return [reqPost];
+	else if (postCache.length > 0) return postCache;
+	else {
+		const response = await fetch(
+			`${endpointDomain}/personal/blog/json?${amount ? "amount=" + amount : ""}${postId ? "&postId=" + postId : ""}${tags ? "&tags=" + tags : ""}`,
+		);
+		if (response.ok) {
+			const posts = await response.text();
+			return JSON.parse(posts);
+		} else return false;
+	}
 }
 
 export async function getTags(): Promise<Record<string, number> | false> {

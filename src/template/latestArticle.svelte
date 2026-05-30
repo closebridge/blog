@@ -3,10 +3,9 @@
 	import { getArticles } from "../script/blogEndpointFetcher";
 	import { isInEditingGetter } from "../script/editorHandler.svelte";
 	import { editBlogPageStat } from "../script/editorHandler.svelte";
-	import { popupRecordManager } from "./components/externalScreen.svelte";
 	import { navigateTo } from "../script/navigationHandler";
 
-	let { postId = 0 } = $props();
+	let postId: number = 0;
 
 	function extractFirstImage(body: string): string {
 		const imageRegex =
@@ -17,6 +16,14 @@
 			"https://share.valhalladev.org/u/placeholder-of-all.png"
 		);
 	}
+
+	(async () => {
+		const articles = await getArticles(1);
+		console.log(articles);
+		if (articles && articles.length > 0) {
+			postId = (articles[0].PostId as number) || 0; // topmost is latest
+		}
+	})();
 
 	function offsetImage(type: "out" | "in") {
 		const el = document.getElementById("picked-image");
@@ -33,7 +40,7 @@
 </script>
 
 <div>
-	{#if isInEditingGetter()}
+	<!-- {#if isInEditingGetter()}
 		<Title
 			numberCount={2}
 			title="my picked article"
@@ -46,7 +53,8 @@
 		/>
 	{:else}
 		<Title numberCount={2} title="my picked article" extraFeature={false} />
-	{/if}
+	{/if} -->
+	<Title numberCount={2} title="my latest article" extraFeature={false} />
 
 	{#if postId !== 0}
 		{#await getArticles(1, postId)}
@@ -125,6 +133,6 @@
 			{/if}
 		{/await}
 	{:else}
-		<p class="secondary-text mono">i havent figured which one yet LOL</p>
+		<p class="secondary-text mono">cant find shit</p>
 	{/if}
 </div>

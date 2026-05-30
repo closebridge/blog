@@ -8,7 +8,8 @@
 
 	import Header from "./template/header.svelte";
 	import MyThought from "./template/myThought.svelte";
-	import EditorPickedArticle from "./template/editorPickedArticle.svelte";
+	// @ts-ignore: actual "shut the fuck up"
+	import LatestArticle from "./template/latestArticle.svelte";
 	import TagHeatmap from "./template/tagHeatmap.svelte";
 	import Embeds from "./template/embeds.svelte";
 	import Footer from "./template/footer.svelte";
@@ -29,7 +30,6 @@
 
 	import navigationHandler, { navigateTo } from "./script/navigationHandler";
 
-	let favePostId: number = $state(0);
 	let pageStatusResult = $state<PageStatus | null>(null);
 
 	// edit imports
@@ -38,7 +38,7 @@
 		// This runs when component mounts
 		getPageStatus().then((result) => {
 			pageStatusResult = result;
-			favePostId = result.FavoritePostId;
+			// newestPostId = result.FavoritePostId;
 		});
 
 		if (!titleHandler("home")) return;
@@ -83,7 +83,7 @@
 		<br />
 		<br />
 
-		<EditorPickedArticle postId={favePostId} />
+		<LatestArticle />
 	</div>
 
 	<div class="w-full">
