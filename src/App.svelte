@@ -9,9 +9,9 @@
 	import Header from "./template/header.svelte";
 	import MyThought from "./template/myThought.svelte";
 	// @ts-ignore: actual "shut the fuck up"
-	import LatestArticle from "./template/latestArticle.svelte";
+	// import LatestArticle from "./template/latestArticle.svelte";
 	import TagHeatmap from "./template/tagHeatmap.svelte";
-	import Embeds from "./template/embeds.svelte";
+	// import Embeds from "./template/embeds.svelte";
 	import Footer from "./template/footer.svelte";
 	import ExternalScreen, {
 		globalPopupState,
