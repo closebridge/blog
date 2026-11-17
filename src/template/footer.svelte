@@ -3,24 +3,30 @@
 >
 	<div class="grid grid-cols-2 justify-evenly gap-4">
 		<div class="*:block secondary-text">
-			<p class="font-thin">nogisoft.work</p>
-			<a href="/" class="font-medium">home page</a>
-			<a href="/" class="font-medium">my portfolio</a>
+			<p>nogisoft.work</p>
+			<a href="/" class="font-medium disabled-text cursor-not-allowed"
+				>home page</a
+			>
+			<a href="/" class="font-medium disabled-text cursor-not-allowed"
+				>my portfolio</a
+			>
 			<a href="/" class="font-medium">my blog</a>
 		</div>
 
 		<div class="*:block secondary-text">
-			<p class="font-thin">nsense.nogisoft.work</p>
-			<a href="/" class="font-medium">about nSense</a>
-			<a href="/" class="font-medium">migration assistant</a>
-			<a href="/" class="font-medium">status page</a>
+			<p>nsense.nogisoft.work</p>
+			<a href="/" class="disabled-text">about nSense</a>
+			<a href="/" class="disabled-text cursor-not-allowed"
+				>migration assistant</a
+			>
+			<a href="/" class="disabled-text cursor-not-allowed">status page</a>
 		</div>
 
 		<div class="*:block secondary-text">
-			<p class="font-thin">hardware.nogisoft.work</p>
-			<a href="/" class="font-medium">lol?</a>
-			<a href="/" class="font-medium">lmfao?</a>
-			<a href="/" class="font-medium">bru?</a>
+			<p>hardware.nogisoft.work</p>
+			<a href="/" class="disabled-text cursor-not-allowed">lol?</a>
+			<a href="/" class="disabled-text cursor-not-allowed">lmfao?</a>
+			<a href="/" class="disabled-text cursor-not-allowed">bru?</a>
 		</div>
 	</div>
 
