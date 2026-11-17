@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import Title from "./components/title.svelte";
 	import { getArticles } from "../script/blogEndpointFetcher";
 	import { isInEditingGetter } from "../script/editorHandler.svelte";
@@ -135,4 +135,4 @@
 	{:else}
 		<p class="secondary-text mono">cant find shit</p>
 	{/if}
-</div>
+</div> -->

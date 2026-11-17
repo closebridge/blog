@@ -83,7 +83,7 @@
 		<br />
 		<br />
 
-		<LatestArticle />
+		<!-- <LatestArticle /> -->
 	</div>
 
 	<div class="w-full">
