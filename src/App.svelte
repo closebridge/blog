@@ -89,7 +89,7 @@
 	<div class="w-full">
 		{#if isInEditingGetter()}
 			<Title
-				numberCount={3}
+				numberCount={2}
 				title="my articles"
 				classes="align-center"
 				extraFeature={[
@@ -105,7 +105,7 @@
 				]}
 			/>
 		{:else}
-			<Title numberCount={3} title="my articles" classes="align-center" />
+			<Title numberCount={2} title="my articles" classes="align-center" />
 		{/if}
 
 		<div class="grid grid-cols-2 items-start md:items-center gap-6 mx-4">

@@ -43,7 +43,7 @@
 </script>
 
 <div>
-	<Title title="tag heatmap" numberCount={4} />
+	<Title title="tag heatmap" numberCount={3} />
 	<!-- FUTURE: make elemnt actually packed tightly -->
 	<div class="flex justify-center">
 		<div
