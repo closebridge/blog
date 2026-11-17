@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import Title from "./components/title.svelte";
 </script>
 
@@ -33,4 +33,4 @@
 			</p>
 		</div>
 	</div>
-</div>
+</div> -->

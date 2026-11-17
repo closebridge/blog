@@ -163,7 +163,7 @@
 	>
 		<TagHeatmap />
 
-		<Embeds />
+		<!-- <Embeds /> -->
 	</div>
 	<Footer />
 </div>
